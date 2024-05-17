@@ -2,21 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', function () {
-    return view('admin');
+Route::get('/newad', function () {
+    return view('newad');
 });
 
-Route::get('/departments/create', [DepartmentController::class, 'create'])->name('departments.create');
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
-Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Define route name for transactions.store
+Route::get('/transactions/by-department/{departmentId}', [TransactionController::class, 'getTransactionsByDepartment']);
+Route::get('/departments/all', [DepartmentController::class, 'all'])->name('departments.all');
 
 
+Route::get('/departments/{departmentId}', [DepartmentController::class, 'getDepartmentById']);
 
 
