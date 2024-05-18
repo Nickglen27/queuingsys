@@ -16,6 +16,11 @@ Route::get('/registrar', function () {
     return view('registrar');
 });
 
+
+Route::get('/tv', function () {
+    return view('tv');
+});
+
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
 Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
 Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Define route name for transactions.store

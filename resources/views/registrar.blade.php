@@ -86,6 +86,10 @@
             width: 20%;
             /* Adjust width as needed */
         }
+
+        .green-header {
+            background-color: green;
+        }
     </style>
 </head>
 
@@ -96,7 +100,7 @@
                 <h1>REGISTRAR</h1>
             </a>
             <strong>
-                <div class="timezone">Philippine Time: <span id="beijing-time"></span></div>
+                <div class="timezone"><span id="beijing-time"></span></div>
             </strong>
         </div>
     </nav>
@@ -105,28 +109,89 @@
         <div class="row">
             <div class="col-6">
                 <div class="archive-container">
-                    <button class="btn btn-primary archive-btn">
+                    <button class="btn btn-primary archive-btn" data-bs-toggle="modal" data-bs-target="#archiveModal">
                         <i class="fas fa-archive"></i> Archive
                     </button>
                 </div>
             </div>
         </div>
-        <>
-            <table id="dataTable" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th style="width: 5%;">#</th>
-                        <th style="width: 30%;">Name</th>
-                        <th style="width: 30%;">Transaction</th>
-                        <th style="width: 25%;">Department</th>
-                        <th style="width: 10%;">Que</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Add your data rows here -->
-                </tbody>
-            </table>
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 30%;">Name</th>
+                    <th style="width: 30%;">Transaction</th>
+                    <th style="width: 25%;">Department</th>
+                    <th style="width: 10%;">Que</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Chiwan Florante Valmores</td>
+                    <td>Tuition</td>
+                    <td>Cashier</td>
+                    <td>69</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Jhonel Anor Benedicto</td>
+                    <td>Enroll</td>
+                    <td>Admin</td>
+                    <td>169</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
+    <!-- Modal for Archiving -->
+    <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: green;">
+                    <h5 class="modal-title" id="archiveModalLabel" style="font-weight: bold; color: white;">Archive Data
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 30%;">Name</th>
+                                <th style="width: 30%;">Transaction</th>
+                                <th style="width: 25%;">Department</th>
+                                <th style="width: 10%;">Que</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Chiwan Florante Valmores</td>
+                                <td>Tuition</td>
+                                <td>Cashier</td>
+                                <td>69</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Jhonel Anor Benedicto</td>
+                                <td>Enroll</td>
+                                <td>Admin</td>
+                                <td>169</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Archive</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Modal -->
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -141,21 +206,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         // Function to display Beijing time
-        function displayBeijingTime() {
-            // Get current date and time in Beijing timezone
-            var beijingTime = new Date().toLocaleString("en-US", {
-                timeZone: "Asia/Shanghai"
+            function displayBeijingTime() {
+                // Get current date and time in Beijing timezone
+                var beijingTime = new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Shanghai"
+                });
+                document.getElementById("beijing-time").innerHTML = beijingTime;
+            }
+    
+            // Update Beijing time every second
+            setInterval(displayBeijingTime, 1000);
+    
+            // Initialize DataTable
+            $(document).ready(function () {
+                $('#dataTable').DataTable();
             });
-            document.getElementById("beijing-time").innerHTML = beijingTime;
-        }
-
-        // Update Beijing time every second
-        setInterval(displayBeijingTime, 1000);
-
-        // Initialize DataTable
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-        });
     </script>
 
 </body>
