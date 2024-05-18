@@ -111,20 +111,21 @@
                 </div>
             </div>
         </div>
-        <table id="dataTable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th style="width: 5%;">#</th>
-                    <th style="width: 30%;">Name</th>
-                    <th style="width: 30%;">Transaction</th>
-                    <th style="width: 25%;">Department</th>
-                    <th style="width: 10%;">Que</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Add your data rows here -->
-            </tbody>
-        </table>
+        <>
+            <table id="dataTable" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 30%;">Name</th>
+                        <th style="width: 30%;">Transaction</th>
+                        <th style="width: 25%;">Department</th>
+                        <th style="width: 10%;">Que</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add your data rows here -->
+                </tbody>
+            </table>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
