@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Select2 CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
 
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -126,7 +126,7 @@
                     <table id="transactionsTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th></th>
+                                <th style="width: 20px;"></th>
                                 <th>Transaction Type</th>
                                 <!-- Add more columns as needed -->
                             </tr>
@@ -137,14 +137,11 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 
     <!-- Add Transaction Modal -->
     <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"
@@ -172,28 +169,21 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveTransactionBtn">Save Transaction</button>
+                    <button type="button" class="btn btn-success" id="saveTransactionBtn">Save Transaction</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
     <div class="container mt-7">
-        <table id="Departments" class="table table-striped table-bordered">
+        <table id="Departments" class="table table-striped table-bordered ">
             <thead>
                 <tr>
-                    <th style="width: 20px;"><strong>#</strong></th>
-                    <th><strong>Department</strong></th>
-                    <th><strong>Transaction</strong></th>
-                    <th><strong></strong></th>
-
+                    <th>Department</th>
+                    <th>Transaction</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Departments will be populated here -->
-            </tbody>
+
         </table>
     </div>
     <!-- Bootstrap Bundle with Popper -->
@@ -202,78 +192,92 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-    $('#saveDepartment').click(function() {
-        var departmentName = $('#departmentName').val();
+    $('#Departments').DataTable();
+});
 
-        $.ajax({
-            url: '{{ route('departments.store') }}',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                name: departmentName
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#addDepartmentModal').modal('hide');
-                    $('#departmentName').val('');
-                    // Optionally, refresh the department list or update the table
-                    fetchDepartments(); // Assuming you have a function to refresh the table
-                } else {
-                    alert('Error: ' + response.message);
+$(document).ready(function() {
+        // Fetch departments and populate DataTable
+        fetchDepartments();
+    });
+
+    $(document).ready(function() {
+        $('#saveDepartment').click(function() {
+            var departmentName = $('#departmentName').val();
+
+            $.ajax({
+                url: '{{ route('departments.store') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: departmentName
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#addDepartmentModal').modal('hide');
+                        $('#departmentName').val('');
+                        // Refresh departments and DataTable after adding a department
+                        fetchDepartments();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Department added successfully.'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while adding the department.'
+                    });
                 }
-            },
-            error: function(xhr) {
-                alert('An error occurred while adding the department.');
-            }
+            });
         });
     });
-});
 
-// Function to fetch and populate the departments table
-// Function to fetch and populate the departments table
-function fetchDepartments() {
-    $.ajax({
-        url: '{{ route('departments.all') }}',
-        method: 'GET',
-        success: function(response) {
-            let departmentRows = '';
-            response.departments.forEach(function(department, index) {
-                departmentRows += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${department.name}</td>
-                        <td><button class="btn btn-primary custom-button me-2 view-transaction-btn" data-department-id="${department.id}" data-bs-toggle="modal" data-bs-target="#viewTransactionsModal" style="float: left;">View Transaction</button></td>
-                        <td><button class="btn btn-danger btn-sm" onclick="deleteDepartment('${department.name}')">Delete</button></td>
-                    </tr>
-                `;
-            });
-            $('#Departments tbody').html(departmentRows);
-        },
-        error: function(xhr) {
-            $('#Departments tbody').html('<tr><td colspan="4">An error occurred while fetching the department list.</td></tr>');
-        }
-    });
-}
-
-// Event listener for "View Transaction" button click
-$(document).on('click', '.view-transaction-btn', function() {
-    let departmentId = $(this).data('department-id');
-    fetchTransactionsByDepartment(departmentId);
-});
-
-// Function to fetch transactions for a specific department and populate the modal body
-function fetchTransactionsByDepartment(departmentId) {
-    // Your AJAX code to fetch transactions goes here
-}
-
-// Fetch departments on page load
-fetchDepartments();
-
+    // Function to fetch and populate the departments table
+    function fetchDepartments() {
+        $.ajax({
+            url: '{{ route('departments.all') }}',
+            method: 'GET',
+            success: function(response) {
+                let departmentRows = '';
+                response.departments.forEach(function(department, index) {
+                    departmentRows += `
+                        <tr>
+                            <td>${department.name}</td>
+                            <td><button class="btn btn-primary custom-button me-2 view-transaction-btn" data-department-id="${department.id}" data-bs-toggle="modal" data-bs-target="#viewTransactionsModal" style="float: left;">View Transaction</button></td>
+                            <td><button class="btn btn-danger btn-sm" onclick="deleteDepartment('${department.name}')"><i class="fas fa-trash-alt"></i></button></td>
+                        </tr>
+                    `;
+                });
+                // Populate DataTable with fetched departments
+                $('#Departments').DataTable().destroy(); // Destroy existing DataTable
+                $('#Departments tbody').html(departmentRows); // Update table body with new data
+                $('#Departments').DataTable(); // Reinitialize DataTable
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while fetching the department list.'
+                });
+            }
+        });
+    }
 // Function to fetch departments and populate the select input
 function populateDepartmentSelect() {
     $.ajax({
@@ -291,8 +295,12 @@ function populateDepartmentSelect() {
             });
         },
         error: function(xhr) {
-            // Handle error
-            alert('Failed to fetch departments. Error: ' + xhr.responseText);
+            // Handle error with SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to fetch departments. Error: ' + xhr.responseText
+            });
         }
     });
 }
@@ -302,76 +310,111 @@ $('#addTransactionModal').on('show.bs.modal', function() {
     populateDepartmentSelect();
 });
 
-    
-            // Function to delete a department
-            window.deleteDepartment = function(departmentName) {
-                if (confirm('Are you sure you want to delete this department?')) {
-                    $.ajax({
-                        url: '{{ route('departments.destroy', '') }}/' + departmentName,
-                        method: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                fetchDepartments(); // Refresh the department list
-                            } else {
-                                alert('Error: ' + response.message);
-                            }
-                        },
-                        error: function(xhr) {
-                            alert('An error occurred while deleting the department.');
-                        }
+// Function to delete a department
+window.deleteDepartment = function(departmentName) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route('departments.destroy', '') }}/' + departmentName,
+                method: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        fetchDepartments(); // Refresh the department list
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Department has been deleted.'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while deleting the department.'
                     });
                 }
-            };
-
-            // Fetch departments when the "Get All Departments" button is clicked
-            $('#getDepartmentsBtn').click(function() {
-                fetchDepartments();
             });
-        
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire(
+                'Cancelled',
+                'Your department is safe :)',
+                'error'
+            );
+        }
+    });
+};
+
+// Fetch departments when the "Get All Departments" button is clicked
+$('#getDepartmentsBtn').click(function() {
+    fetchDepartments();
+});
 
 // Function to handle transaction creation
 function createTransaction() {
-            // Retrieve input values
-            var transactionType = $('#transactionInput').val();
-            var departmentId = $('#departmentSelect').val();
+    // Retrieve input values
+    var transactionType = $('#transactionInput').val();
+    var departmentId = $('#departmentSelect').val();
 
-            // Make AJAX request
-            $.ajax({
-                url: '{{ route('transactions.store') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    department_id: departmentId,
-                    transaction_type: transactionType
-                },
-                success: function(response) {
-                    // Handle success
-                    alert('Transaction created successfully!');
-                    // Optionally, you can perform additional actions here, such as updating UI or closing the modal
-                    $('#addTransactionModal').modal('hide');
-                },
-                error: function(xhr) {
-                    // Handle error
-                    alert('Failed to create transaction. Error: ' + xhr.responseText);
-                }
+    // Make AJAX request
+    $.ajax({
+        url: '{{ route('transactions.store') }}',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            department_id: departmentId,
+            transaction_type: transactionType
+        },
+        success: function(response) {
+            // Handle success
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Transaction created successfully!'
+            });
+            // Optionally, you can perform additional actions here, such as updating UI or closing the modal
+            $('#addTransactionModal').modal('hide');
+        },
+        error: function(xhr) {
+            // Handle error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Failed to create transaction. Error: ' + xhr.responseText
             });
         }
+    });
+}
 
-        // Submit form using AJAX when 'Save Transaction' button is clicked
-        $('#saveTransactionBtn').click(function() {
-            createTransaction();
-        });
+// Submit form using AJAX when 'Save Transaction' button is clicked
+$('#saveTransactionBtn').click(function() {
+    createTransaction();
+});
 
-            
 // Event listener for "View Transaction" button click
 $(document).on('click', '.view-transaction-btn', function() {
     let departmentId = $(this).data('department-id');
     fetchTransactionsByDepartment(departmentId);
 });
 
+// Function to fetch transactions for a specific department and populate the modal body
 // Function to fetch transactions for a specific department and populate the modal body
 function fetchTransactionsByDepartment(departmentId) {
     $.ajax({
@@ -391,11 +434,10 @@ function fetchTransactionsByDepartment(departmentId) {
             $('#transactionsBody').html(transactionRows); // Populate the modal body with transaction types
         },
         error: function(xhr) {
-            $('#transactionsBody').html('<tr><td colspan="2">An error occurred while fetching transactions.</td></tr>');
+            $('#transactionsBody').html('<tr><td colspan="2">No Available Transaction Type.</td></tr>');
         }
     });
 }
-
     </script>
 
 </body>
