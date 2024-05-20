@@ -17,6 +17,10 @@ Route::get('/newad', function () {
     return view('newad');
 });
 
+Route::get('/registrar', function () {
+    return view('registrar');
+});
+
 Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);
 
 
@@ -36,3 +40,5 @@ Route::get('/transactions/by-department/{departmentId}', [TransactionController:
 Route::get('/departments/all', [DepartmentController::class, 'all'])->name('departments.all');
 Route::get('/departments/{departmentId}', [DepartmentController::class, 'getDepartmentById']);
 Route::post('/store-details', [StudTransController::class, 'store']);
+
+Route::get('/fetch-studtrans', [StudTransController::class, 'fetchStudTrans']);

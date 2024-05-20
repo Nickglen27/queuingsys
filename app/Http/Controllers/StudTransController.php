@@ -52,4 +52,12 @@ class StudTransController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid data provided.']);
         }
     }
+
+    public function fetchStudTrans()
+    {
+        // Fetch all StudTrans records with related student, department, and transaction data
+        $studTrans = StudTrans::with(['student', 'department', 'transaction'])->get();
+
+        return response()->json($studTrans);
+    }
 }
