@@ -73,11 +73,17 @@
 </head>
 
 <body style="background-color: #ECF0F1;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container">
-            <a class="navbar-brand" href="#"><strong>Hello Admin</strong></a> <!-- Bold "Hello Admin" -->
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+        <a class="navbar-brand" href="#"><strong>Hello Admin</strong></a>
+        <!-- Bold "Hello Admin" -->
+        <button class="btn btn-outline-light" onclick="window.location='{{ route('logout') }}'" title="Logout">
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+        </button>
+        <!-- Button with logout icon and text -->
+    </div>
+</nav>
+
 
     <div class="container mt-3">
         <button class="btn btn-primary custom-button me-2" data-bs-toggle="modal"
