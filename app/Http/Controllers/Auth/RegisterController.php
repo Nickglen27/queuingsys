@@ -8,17 +8,18 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
     use RegistersUsers;
 
     /**
-     * Where to redirect users after registration based on their department.
+     * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo;
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -28,31 +29,6 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-    }
-
-    /**
-     * Get the post register / login redirect path based on the user's department.
-     *
-     * @return string
-     */
-    protected function redirectTo()
-    {
-        $department = request()->input('department');
-
-        // Modify the redirection logic based on the selected department
-        switch ($department) {
-            case 'Registrar':
-                return route('registration.registrar');
-                break;
-            case 'Admin':
-                return route('registration.admin');
-                break;
-            case 'Cashier':
-                return route('registration.cashier');
-                break;
-            default:
-                return '/';
-        }
     }
 
     /**
@@ -67,7 +43,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'department' => ['required', 'string', 'in:Registrar,Admin,Cashier'],
         ]);
     }
 
@@ -83,7 +58,6 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'department' => $data['department'],
         ]);
     }
 
@@ -96,4 +70,19 @@ class RegisterController extends Controller
     {
         return view('auth.register');
     }
+
+    // /**
+    //  * Handle a registration request for the application.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return \Illuminate\Http\JsonResponse
+    //  */
+    // public function register(Request $request)
+    // {
+    //     $this->validator($request->all())->validate();
+
+    //     $user = $this->create($request->all());
+
+    //     return response()->json(['success' => true], 201);
+    // }
 }

@@ -138,9 +138,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+63CT6eS1gEPv8zjvp3mh9TB6a9zFpV5P8rBwVvq+n5+80VnpvO+2zCxgT" crossorigin="anonymous"></script>
     <!-- Bootstrap Dropdown Script -->
     <script>
-        // Initialize Bootstrap dropdowns
-        document.addEventListener('DOMContentLoaded', function () {
-            var dropdowns = document.querySelectorAll('.dropdown-toggle');
+       // Initialize Bootstrap dropdowns only if not on the login page
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdowns = document.querySelectorAll('.dropdown-toggle');
+        if (!window.location.pathname.includes('login')) {
             dropdowns.forEach(function (dropdown) {
                 dropdown.addEventListener('click', function () {
                     var menu = dropdown.nextElementSibling;
@@ -151,22 +152,21 @@
                     }
                 });
             });
+        }
+//             @if(auth()->check())
+//     @if(auth()->user()->department === 'Registrar')
+//         window.location.href = "{{ route('registration.registrar') }}";
+//     @elseif(auth()->user()->department === 'Admin')
+//         window.location.href = "{{ route('registration.admin') }}";
+//     @elseif(auth()->user()->department === 'Cashier')
+//         window.location.href = "{{ route('registration.cashier') }}";
+//     @else
+//         window.location.href = "{{ url('cashier') }}";
+//     @endif
+// @endif
 
-            // Redirection logic after 5 seconds
-            @if(auth()->check())
-                setTimeout(function() {
-                    @if(auth()->user()->department === 'Registrar')
-                        window.location.href = "{{ route('registration.registrar') }}";
-                    @elseif(auth()->user()->department === 'Admin')
-                        window.location.href = "{{ route('registration.admin') }}";
-                    @elseif(auth()->user()->department === 'Cashier')
-                        window.location.href = "{{ route('registration.cashier') }}";
-                    @else
-                        window.location.href = "{{ url('cashier') }}";
-                    @endif
-                }, 5000); // 5000 milliseconds = 5 seconds
-            @endif
         });
+    
     </script>
 </body>
 </html>
