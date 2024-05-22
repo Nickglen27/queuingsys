@@ -62,6 +62,22 @@
         thead th {
             font-weight: bold;
         }
+
+        .shadow {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom CSS for smaller text in modals */
+        .modal-content .modal-header,
+        .modal-content .modal-body,
+        .modal-content .modal-footer,
+        .modal-content .modal-title,
+        .modal-content .form-label,
+        .modal-content .form-control,
+        .modal-content .btn {
+            font-size: 0.875rem;
+            /* This is equivalent to small text */
+        }
     </style>
 </head>
 
@@ -73,18 +89,24 @@
     </nav>
 
     <div class="container mt-3">
-        <button class="btn btn-primary custom-button me-2" data-bs-toggle="modal"
-            data-bs-target="#addDepartmentModal">Add Department</button>
-    </div>
-    <div class="container mt-3">
-        <button class="btn btn-primary custom-button me-2" data-bs-toggle="modal"
-            data-bs-target="#addTransactionModal">Add Transaction</button>
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-primary custom-width me-2" data-bs-toggle="modal" data-bs-target="#userModal">
+                <i class="fas fa-user fa-sm me-2"></i>User Role
+            </button>
+            <div class="d-flex">
+                <button class="btn btn-primary custom-button me-3" data-bs-toggle="modal"
+                    data-bs-target="#addDepartmentModal">Add Department</button>
+                <button class="btn btn-primary custom-button" data-bs-toggle="modal"
+                    data-bs-target="#addTransactionModal">Add Transaction</button>
+            </div>
+        </div>
     </div>
 
     <br><br><br>
+
     <!-- Add Department Modal -->
     <div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-labelledby="addDepartmentModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success">
@@ -110,12 +132,9 @@
         </div>
     </div>
 
-
-
-    <!-- View Transactions Modal -->
     <!-- View Transactions Modal -->
     <div class="modal fade" id="viewTransactionsModal" tabindex="-1" aria-labelledby="viewTransactionsModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-info">
@@ -145,7 +164,7 @@
 
     <!-- Add Transaction Modal -->
     <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
@@ -174,8 +193,62 @@
             </div>
         </div>
     </div>
+
+    <!-- User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-center">
+                    <h5 class="modal-title text-white fw-bold fs-2" id="userModalLabel">User Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table id="usersTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Department</th>
+                                <th>Window</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-username="John Doe" data-department="Cashier" data-window="Windows 10">
+                                <td>John Doe</td>
+                                <td>Cashier</td>
+                                <td>Windows 10</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1 edit-btn" title="Edit"><i
+                                            class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Delete"><i
+                                            class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr data-username="Jane Smith" data-department="Registrar" data-window="Windows 11">
+                                <td>Jane Smith</td>
+                                <td>Registrar</td>
+                                <td>Windows 11</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1 edit-btn" title="Edit"><i
+                                            class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Delete"><i
+                                            class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container mt-7">
-        <table id="Departments" class="table table-striped table-bordered ">
+        <table id="Departments" class="table table-sm table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>Department</th>
@@ -183,9 +256,45 @@
                     <th></th>
                 </tr>
             </thead>
-
         </table>
     </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog shadow">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-center">
+                    <h5 class="modal-title text-white fw-bold fs-2" id="editUserModalLabel">Edit User Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <div class="mb-3">
+                            <strong><label for="editUsername" class="form-label">Username</label></strong>
+                            <input type="text" class="form-control" id="editUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <strong><label for="editDepartment" class="form-label">Department</label></strong>
+                            <select class="form-control" id="editDepartment" required>
+                                <option value="Cashier">Cashier</option>
+                                <option value="Registrar">Registrar</option>
+                                <option value="Support">Support</option>
+                                <!-- Add more departments as needed -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <strong><label for="editWindow" class="form-label">Window</label></strong>
+                            <input type="text" class="form-control" id="editWindow" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables JavaScript -->
@@ -199,7 +308,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-    $('#Departments').DataTable();
+    $('#Departments, #usersTable').DataTable();
 });
 
 $(document).ready(function() {
@@ -438,6 +547,47 @@ function fetchTransactionsByDepartment(departmentId) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const editButtons = document.querySelectorAll('.edit-btn');
+    const editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+    const editUserForm = document.getElementById('editUserForm');
+    let currentRow;
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const row = e.target.closest('tr');
+            currentRow = row;
+            const username = row.getAttribute('data-username');
+            const department = row.getAttribute('data-department');
+            const window = row.getAttribute('data-window');
+
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editDepartment').value = department;
+            document.getElementById('editWindow').value = window;
+
+            editUserModal.show();
+        });
+    });
+
+    editUserForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const updatedUsername = document.getElementById('editUsername').value;
+        const updatedDepartment = document.getElementById('editDepartment').value;
+        const updatedWindow = document.getElementById('editWindow').value;
+
+        currentRow.querySelector('td:nth-child(1)').textContent = updatedUsername;
+        currentRow.querySelector('td:nth-child(2)').textContent = updatedDepartment;
+        currentRow.querySelector('td:nth-child(3)').textContent = updatedWindow;
+
+        currentRow.setAttribute('data-username', updatedUsername);
+        currentRow.setAttribute('data-department', updatedDepartment);
+        currentRow.setAttribute('data-window', updatedWindow);
+
+        editUserModal.hide();
+    });
+});
     </script>
 
 </body>
