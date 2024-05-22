@@ -42,4 +42,27 @@ class StudTrans extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+
+    /**
+     * The "booted" method of the model.
+     * Listen for the `created` event and create a Queuing record.
+     */
+    protected static function booted()
+    {
+        static::created(function ($studTrans) {
+            // Find the current maximum priority_num in the queuing table
+            $maxPriorityNum = \App\Models\Queuing::max('priority_num');
+
+            // Increment the priority_num by 1 for the new record
+            $newPriorityNum = is_null($maxPriorityNum) ? 1 : $maxPriorityNum + 1;
+
+            // Create a new Queuing record with the incremented priority_num
+            \App\Models\Queuing::create([
+                'studtrans_id' => $studTrans->id,
+                'priority_num' => $newPriorityNum,
+                'guest_id' => null // Allow guest_id to be null
+            ]);
+        });
+    }
 }
+

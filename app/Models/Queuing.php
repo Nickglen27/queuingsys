@@ -9,17 +9,22 @@ class Queuing extends Model
 {
     use HasFactory;
 
+    // Specify the table if it doesn't follow the naming convention
+    protected $table = 'queuing';
+
+    // Define the fillable properties
     protected $fillable = [
         'studtrans_id',
+        'priority_num',
         'guest_id'
     ];
 
     /**
-     * Get the studtrans record associated with the queuing.
+     * Get the StudTrans associated with the queuing.
      */
-    public function studtrans()
+    public function studTrans()
     {
-        return $this->belongsTo(StudTrans::class);
+        return $this->belongsTo(StudTrans::class, 'studtrans_id');
     }
 
     /**
@@ -27,6 +32,6 @@ class Queuing extends Model
      */
     public function guest()
     {
-        return $this->belongsTo(Guest::class);
+        return $this->belongsTo(Guest::class, 'guest_id');
     }
 }

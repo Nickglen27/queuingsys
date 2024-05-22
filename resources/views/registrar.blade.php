@@ -123,7 +123,7 @@
                 <th style="width: 30%;">Transaction</th>
                 <th style="width: 25%;">Department</th>
                 <th style="width: 25%;">Window</th>
-                <th style="width: 10%;">Queue</th>
+    
                 <th style="width: 10%;">Actions</th>
             </tr>
         </thead>
@@ -153,7 +153,7 @@
                                 <th style="width: 30%;">Name</th>
                                 <th style="width: 30%;">Transaction</th>
                                 <th style="width: 25%;">Department</th>
-                                <th style="width: 13%;">Queu</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
@@ -214,7 +214,6 @@ $(document).ready(function() {
                     row.append($('<td>').text(item.transaction.transaction_type));
                     row.append($('<td>').text(item.department.name));
                     row.append($('<td>').text('Window')); // Replace with actual window data if available
-                    row.append($('<td>').text('Queu'));   // Replace with actual queue data if available
                     row.append($('<td>').html('<button class="btn btn-primary">Action</button>'));
 
                     tbody.append(row);

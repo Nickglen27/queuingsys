@@ -6,6 +6,8 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StudTransController;
 use App\Http\Controllers\QueuingController;
+use App\Http\Controllers\TvController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +22,10 @@ Route::get('/newad', function () {
 
 Route::get('/registrar', function () {
     return view('registrar');
+});
+
+Route::get('/tv', function () {
+    return view('tv');
 });
 
 Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);
@@ -45,3 +51,7 @@ Route::get('/fetch-studtrans', [StudTransController::class, 'fetchStudTrans']);
 
 
 Route::get('/populate-queuing-table', [QueuingController::class, 'populateQueuingTable']);
+
+
+// In routes/web.php
+Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
