@@ -7,6 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 
 
@@ -55,32 +69,6 @@
             --text-color: #ccc;
         }
 
-        /* Navbar */
-        .navbar {
-            height: 100px;
-        }
-
-        @keyframes bounce {
-            0% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        .navbar-brand {
-            font-family: 'Poppins', sans-serif;
-            animation: bounce 2s infinite;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
         /* Sidebar */
         .sidebar {
             position: fixed;
@@ -113,7 +101,7 @@
         }
 
         .sidebar .icon {
-            min-width: 55px;
+            min-width: 1px;
             border-radius: 6px;
             height: 60%;
             display: flex;
@@ -299,20 +287,22 @@
                 </ul>
             </div>
             <div class="bottom-content">
-                <li class="mode">
-                    <div class="sun-moon">
-                        <i class='bx bx-moon icon moon'></i>
-                        <i class='bx bx-sun icon sun'></i>
-                    </div>
-                    <span class="mode-text text">Dark mode</span>
-                    <div class="toggle-switch">
+                <li class="mode" style="display: inline-flex; align-items: flex-start; margin-right: 30px;">
+                    <div class="toggle-switch" style="margin-top: 10px;">
                         <span class="switch"></span>
                     </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span class="mode-text text">Dark Mode</span>
+                <li class="" style="display: inline-block; vertical-align: middle; margin-top: 5px;">
+                    <a href="#">
+                        <i class='bx bx-log-out icon'></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
                 </li>
             </div>
+            </li>
         </div>
     </nav>
-
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
