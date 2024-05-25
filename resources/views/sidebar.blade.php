@@ -78,11 +78,11 @@
         }
 
         .sidebar.close {
-            width: 68px;
+            width: 80px;
         }
 
         .sidebar li {
-            height: 50px;
+            height: 60px;
             list-style: none;
             display: flex;
             align-items: center;
@@ -90,7 +90,7 @@
         }
 
         .sidebar .icon {
-            min-width: 1px;
+            min-width: 35px;
             border-radius: 6px;
             height: 60%;
             display: flex;
@@ -116,7 +116,7 @@
         .sidebar header .toggle {
             position: absolute;
             top: 50%;
-            right: -15px;
+            right: -20px;
             transform: translateY(-0%) rotate(180deg);
             height: 35px;
             width: 35px;
@@ -214,7 +214,7 @@
             position: absolute;
             right: 0;
             height: 100%;
-            min-width: 60px;
+            min-width: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
