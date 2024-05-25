@@ -21,9 +21,14 @@ Route::get('/tv', function () {
     return view('tv');
 });
 
+Route::get('/sidebar', function () {
+    return view('sidebar');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+
 
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
 Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
