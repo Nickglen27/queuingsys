@@ -7,9 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>sidebar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -262,7 +261,7 @@
             <div class="menu">
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url('/dashboard') }}">
                             <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Dashboard</span>
                         </a>
@@ -274,7 +273,7 @@
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url('/user') }}">
                             <i class='bx bxs-user icon'></i>
                             <span class="text nav-text">User</span>
                         </a>
@@ -308,6 +307,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    </a>
+    </li>
+    </div>
+    </li>
+    </div>
+    </nav>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JavaScript -->
+
     <script>
         const body = document.querySelector('body'),
             sidebar = body.querySelector('nav.sidebar'),

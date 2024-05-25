@@ -16,7 +16,6 @@ Route::get('/registrar', function () {
     return view('registrar');
 });
 
-
 Route::get('/tv', function () {
     return view('tv');
 });
@@ -29,6 +28,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::get('/user', function () {
+    return view('user');
+});
 
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
 Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
