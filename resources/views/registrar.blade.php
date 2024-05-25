@@ -90,6 +90,33 @@
         .green-header {
             background-color: green;
         }
+
+
+
+        .btn-group {
+    display: flex;
+    gap: 5px; /* Adjust the gap between buttons as needed */
+}
+
+.btn-yellow {
+    background-color: yellow;
+    border-color: yellow;
+    color: black;
+}
+
+.btn-blue {
+    background-color: blue;
+    border-color: blue;
+    color: white;
+}
+
+
+
+.action-buttons {
+            display: flex;
+            gap: 5px; /* Adjust the gap between buttons as needed */
+        }
+
     </style>
 </head>
 
@@ -115,7 +142,7 @@
                 </div>
             </div>
         </div>
-        <table id="dataTable" class="table table-striped table-bordered">
+        <table id="studentTable" class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th style="width: 5%;">#</th>
@@ -196,42 +223,163 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
 
+
 $(document).ready(function() {
-    function populateTable() {
-        $.ajax({
-            url: '/fetch-studtrans',
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                var tbody = $('#dataTable tbody');
-                tbody.empty();
+    // Make an AJAX request to fetch the student transactions
+    $.ajax({
+        url: '/fetch-stud-trans', // Adjust the URL as per your routing configuration
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Check the console for the response structure
+            console.log(data);
 
-                response.forEach(function(item, index) {
-                    var row = $('<tr>');
-
-                    row.append($('<td>').text(index + 1));
-                    row.append($('<td>').text(item.student.Firstname + ' ' + item.student.Middlename + ' ' + item.student.Lastname));
-                    row.append($('<td>').text(item.transaction.transaction_type));
-                    row.append($('<td>').text(item.department.name));
-                    row.append($('<td>').text('Window')); // Replace with actual window data if available
-                    row.append($('<td>').html('<button class="btn btn-primary">Action</button>'));
-
-                    tbody.append(row);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Failed to fetch studtrans:", status, error);
-            }
-        });
-    }
-
-    populateTable();
+            // Initialize the DataTable with fetched data
+            var dataTable = $('#studentTable').DataTable({
+                data: data,
+                columns: [
+                    { data: null, className: 'text-center', render: (data, type, row, meta) => meta.row + 1 },
+                    { data: null, className: 'text-center', render: data => `${data.student.Firstname} ${data.student.Middlename} ${data.student.Lastname}` },
+                    { data: 'transaction.transaction_type', className: 'text-center', defaultContent: 'N/A' },
+                    { data: 'department.name', className: 'text-center' },
+                    { data: 'windows', className: 'text-center' }, // Corrected field name to 'windows'
+                    {
+                        data: null,
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="btn btn-primary call" data-id="${row.id}">Call</button>
+                                    <button class="btn btn-secondary archive" data-id="${row.id}">Archive</button>
+                                    <button class="btn btn-success done" data-id="${row.id}">Done</button>
+                                </div>`;
+                        }
+                    }
+                ]
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching student transactions:', error);
+        }
+    });
 });
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// $(document).ready(function() {
+//     function populateTable() {
+//         $.ajax({
+//             url: '/fetch-studtrans',
+//             method: 'GET',
+//             dataType: 'json',
+//             success: function(response) {
+//                 var tbody = $('#dataTable tbody');
+//                 tbody.empty();
+
+//                 response.forEach(function(item, index) {
+//                     var row = $('<tr>');
+
+//                     row.append($('<td>').text(index + 1));
+//                     row.append($('<td>').text(item.student.Firstname + ' ' + item.student.Middlename + ' ' + item.student.Lastname));
+//                     row.append($('<td>').text(item.transaction.transaction_type));
+//                     row.append($('<td>').text(item.department.name));
+//                     row.append($('<td>').text('Window')); // Replace with actual window data if available
+
+//                     // Create buttons container
+//                     var buttonsContainer = $('<div class="btn-group" role="group">');
+//                     var callButton = $('<button class="btn btn-yellow">').text('Call');
+//                     var archiveButton = $('<button class="btn btn-blue">').text('Archive');
+//                     var doneButton = $('<button class="btn btn-success">').text('Done');
+
+//                     // Append buttons to the buttons container
+//                     buttonsContainer.append(callButton).append(archiveButton).append(doneButton);
+
+//                     // Create a table cell and append the buttons container
+//                     var buttonsCell = $('<td>').append(buttonsContainer);
+//                     row.append(buttonsCell);
+
+//                     tbody.append(row);
+//                 });
+//             },
+//             error: function(xhr, status, error) {
+//                 console.error("Failed to fetch studtrans:", status, error);
+//             }
+//         });
+//     }
+
+//     populateTable();
+// });
+
+
+
+
+
+
+
+    
 
 
 

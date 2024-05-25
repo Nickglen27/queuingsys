@@ -15,8 +15,10 @@ class QueuingController extends Controller
      */
     public function fetchIds()
     {
-        // Fetch all Queuing records with studtrans_id and guest_id
-        $queuingRecords = Queuing::with('studTrans')->select('studtrans_id', 'guest_id')->get();
+        // Fetch all Queuing records with studtrans_id and related data from StudTrans model
+        $queuingRecords = Queuing::with('studTrans.student', 'studTrans.department', 'studTrans.transaction', 'studTrans.windows')
+            ->select('studtrans_id', 'guest_id')
+            ->get();
 
         return response()->json($queuingRecords);
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Queuing; // Import the Queuing model
 
 class StudTrans extends Model
 {
@@ -16,7 +17,8 @@ class StudTrans extends Model
     protected $fillable = [
         'student_id',
         'department_id',
-        'transaction_id'
+        'transaction_id',
+        'windows' // Fixed typo here
     ];
 
     /**
@@ -51,18 +53,21 @@ class StudTrans extends Model
     {
         static::created(function ($studTrans) {
             // Find the current maximum priority_num in the queuing table
-            $maxPriorityNum = \App\Models\Queuing::max('priority_num');
-
+            $maxPriorityNum = Queuing::max('priority_num');
+    
             // Increment the priority_num by 1 for the new record
             $newPriorityNum = is_null($maxPriorityNum) ? 1 : $maxPriorityNum + 1;
-
-            // Create a new Queuing record with the incremented priority_num
-            \App\Models\Queuing::create([
+    
+            // Calculate the window number based on the new priority_num
+            $window = ($newPriorityNum % 3) + 1; // Assuming 3 windows, adjust as needed
+    
+            // Create a new Queuing record with the incremented priority_num and window
+            Queuing::create([
                 'studtrans_id' => $studTrans->id,
                 'priority_num' => $newPriorityNum,
-                'guest_id' => null // Allow guest_id to be null
+                'guest_id' => null, // Allow guest_id to be null
+                'windows' => $window // Fixed field name here
             ]);
         });
     }
 }
-

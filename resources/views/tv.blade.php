@@ -24,6 +24,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
+
+
+        .background-light {
+            background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rgba(0,212,255,1) 100%);
+        }
+        
         .navbar {
             height: 100px;
         }
@@ -67,9 +74,10 @@
             margin: 20px;
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            font-size: 24px;
+            font-size: 30px;
+            width: 100%;
             /* Adjust the font size as needed */
         }
 
@@ -89,7 +97,7 @@
         .queue-list table th,
         .queue-list table td {
             padding: 15px;
-            border: 2px solid #ced4da;
+            border: 1px solid #ced4da;
         }
 
         .queue-list table th {
@@ -120,11 +128,24 @@
             text-align: left;
             font-size: 27px;
         }
+        .hidden-row {
+    display: none;
+}
+    
+        .container {
+    margin-left: 120px; /* Adjust the value as needed */    
+    }
+
+    #queuingTableBody {
+            font-size: 30px; /* Adjust the font size as needed */
+            font-weight: bold; /* Make the text bold */
+        }
+
     </style>
 </head>
 
-<body style="background-color: #fbfbfb;">
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #055508;">
+<body class="background-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <h1>Queuing</h1>
@@ -142,39 +163,44 @@
                 <div class="col-md-6">
                     <div class="queue-list">
                         <h3>Next Que</h3>
-                        <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Priority Number</th>
-            </tr>
-        </thead>
-        <tbody id="queuingTableBody">
-            <!-- Rows will be populated here by jQuery -->
-        </tbody>
-    </table>
+                        <table id="queuingTable">
+                 <thead>
+                   <tr>
+                  <th>Name</th>
+                     <th>Priority Number</th>
+                       <th>Window</th>
+                 </tr>
+             </thead>
+         <tbody id="queuingTableBody">
+        <!-- Rows will be populated by jQuery -->
+            </tbody>
+            </table>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="now-serving">
                         <h1>NOW SERVING</h1>
                         <table>
-                            <tr>
-                                <th>Department:</th>
-                                <td>Cashier</td>
-                            </tr>
-                            <tr>
-                                <th>Name:</th>
-                                <td>Chiwan Valmores</td>
-                            </tr>
-                            <tr>
-                                <th>Transaction:</th>
-                                <td>Tuition</td>
-                            </tr>
-                            <tr>
-                                <th>Window:</th>
-                                <td>4</td>
-                            </tr>
+                        <tr>
+    <th>Name:</th>
+    <td id="now-serving-name"></td>
+</tr>
+<tr>
+    <th>Department:</th>
+    <td id="now-serving-department"></td>
+</tr>
+<tr>
+    <th>Transaction:</th>
+    <td id="now-serving-transaction"></td>
+</tr>
+<tr>
+    <th>Window:</th>
+    <td id="now-serving-window"></td>
+</tr>
+<tr>
+    <th>Priority Number:</th>
+    <td id="now-serving-priority"></td>
+</tr>
                         </table>
                     </div>
                 </div>
@@ -197,41 +223,78 @@
 
 
 
- $(document).ready(function() {
-            function populateTable() {
-                $.ajax({
-                    url: '/api/queuing',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        var tbody = $('#queuingTableBody');
-                        tbody.empty();
+$(document).ready(function() {
+    let lastData = [];
 
-                        response.forEach(function(item) {
-                            var row = $('<tr>');
+    function arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i].studtrans_id !== b[i].studtrans_id) return false;
+        }
+        return true;
+    }
 
-                            if (item.stud_trans && item.stud_trans.student) {
-                                var student = item.stud_trans.student;
-                                var fullName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
-                                var priorityNum = item.priority_num;
+    function populateTable() {
+        $.ajax({
+            url: '/api/queuing',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (!arraysEqual(response, lastData)) {
+                    lastData = response;
 
-                                row.append($('<td>').text(fullName));
-                                row.append($('<td>').text(priorityNum));
+                    var tbody = $('#queuingTableBody');
+                    tbody.empty();
 
-                                tbody.append(row);
-                            }
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Failed to fetch queuing data:", status, error);
+                    response.forEach(function(item, index) {
+                        var row = $('<tr>').addClass('hidden-row'); // Add the hidden-row class for initial hiding
+
+                        if (item.stud_trans && item.stud_trans.student) {
+                            var student = item.stud_trans.student;
+                            var fullName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
+                            var priorityNum = item.priority_num;
+                            var windows = item.stud_trans.windows; // Get windows field
+
+                            row.append($('<td>').text(fullName));
+                            row.append($('<td>').text(priorityNum));
+                            row.append($('<td>').text(windows)); // Display windows field
+
+                            tbody.append(row);
+
+                            row.fadeIn('slow'); // Use jQuery fadeIn method for the slow fade-in effect
+                        }
+                    });
+
+                    // Populate the "Now Serving" section with the data of the first item when the table is initially rendered
+                    if (response.length > 0) {
+                        var firstItem = response[0];
+                        var student = firstItem.stud_trans.student;
+                        var fullName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
+                        var department = firstItem.stud_trans.department.name; // Access department name
+                        var transaction = firstItem.stud_trans.transaction.transaction_type; // Access transaction type
+                        var priorityNum = firstItem.priority_num;
+                        var windows = firstItem.stud_trans.windows; // Get windows field
+
+                        $('#now-serving-name').text(fullName);
+                        $('#now-serving-department').text(department);
+                        $('#now-serving-transaction').text(transaction);
+                        $('#now-serving-priority').text(priorityNum);
+                        $('#now-serving-window').text(windows); // Display windows in "Now Serving" section
                     }
-                });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch queuing data:", status, error);
             }
-
-            // Populate the table when the page loads
-            populateTable();
         });
+    }
 
+    // Populate the table when the page loads
+    populateTable();
+
+    // Optionally, set up polling to refresh the table periodically
+    setInterval(populateTable, 5000); // Refresh every 5 seconds
+});
 
 
 

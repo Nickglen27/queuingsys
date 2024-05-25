@@ -47,7 +47,7 @@ Route::get('/transactions/by-department/{departmentId}', [TransactionController:
 Route::get('/departments/all', [DepartmentController::class, 'all'])->name('departments.all');
 Route::get('/departments/{departmentId}', [DepartmentController::class, 'getDepartmentById']);
 Route::post('/store-details', [StudTransController::class, 'store']);
-Route::get('/fetch-studtrans', [StudTransController::class, 'fetchStudTrans']);
+Route::get('/fetch-stud-trans', [StudTransController::class, 'fetchStudTrans']);
 
 
 Route::get('/populate-queuing-table', [QueuingController::class, 'populateQueuingTable']);
@@ -55,3 +55,7 @@ Route::get('/populate-queuing-table', [QueuingController::class, 'populateQueuin
 
 // In routes/web.php
 Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
+
+
+
+
