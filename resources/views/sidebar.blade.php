@@ -140,7 +140,7 @@
         }
 
         .sidebar .menu {
-            margin-top: 40px;
+            margin-top: 120px;
         }
 
         .sidebar li a {
@@ -213,7 +213,7 @@
         .menu-bar .bottom-content .toggle-switch {
             position: absolute;
             right: 0;
-            height: 100%;
+            height: 150%;
             min-width: 30px;
             display: flex;
             align-items: center;
@@ -267,7 +267,7 @@
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url('/newad')}}">
                             <i class='bx bxs-building-house icon'></i>
                             <span class="text nav-text">Department</span>
                         </a>
@@ -281,21 +281,19 @@
                 </ul>
             </div>
             <div class="bottom-content">
-                <li class="mode" style="display: inline-flex; align-items: flex-start; margin-right: 30px;">
-                    <div class="toggle-switch" style="margin-top: 10px;">
-                        <span class="switch"></span>
-                    </div>
-                    <div style="display: flex; flex-direction: column;">
-                        <span class="mode-text text">Dark Mode</span>
-                <li class="" style="display: inline-block; vertical-align: middle; margin-top: 5px;">
-                    <a href="#">
-                        <i class='bx bx-log-out icon'></i>
-                        <span class="text nav-text">Logout</span>
-                    </a>
+                <div class="toggle-switch" style="margin-top: 10px;">
+                    <span class="switch"></span>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <li class="" style="display: inline-block; vertical-align: middle; margin-top: 5px;">
+                        <a href="#">
+                            <i class='bx bx-log-out icon'></i>
+                            <span class="text nav-text">Logout</span>
+                        </a>
+                    </li>
+                </div>
                 </li>
             </div>
-            </li>
-        </div>
     </nav>
 
     <!-- Bootstrap Bundle with Popper -->
@@ -307,16 +305,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    </a>
-    </li>
-    </div>
-    </li>
-    </div>
-    </nav>
-
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables JavaScript -->
 
     <script>
         const body = document.querySelector('body'),
