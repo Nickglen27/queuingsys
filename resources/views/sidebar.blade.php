@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>sidebar</title>
+    <title>Sidebar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -86,7 +85,7 @@
             list-style: none;
             display: flex;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 0px;
         }
 
         .sidebar .icon {
@@ -111,13 +110,17 @@
 
         .sidebar header {
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .sidebar header .toggle {
             position: absolute;
             top: 50%;
             right: -20px;
-            transform: translateY(-0%) rotate(180deg);
+            transform: translateY(-50%) rotate(180deg);
             height: 35px;
             width: 35px;
             background-color: var(--primary-color);
@@ -139,8 +142,20 @@
             transform: translateY(-50%) rotate(0deg);
         }
 
+        .sidebar .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            transition: var(--tran-05);
+        }
+
+        .sidebar.close .logo {
+            width: 40px;
+            height: 40px;
+        }
+
         .sidebar .menu {
-            margin-top: 120px;
+            margin-top: 20px;
         }
 
         .sidebar li a {
@@ -171,7 +186,7 @@
         }
 
         .sidebar .menu-bar {
-            height: calc(100% - 55px);
+            height: calc(80% - 25px);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -189,31 +204,10 @@
             transition: var(--tran-05);
         }
 
-        .menu-bar .mode .sun-moon {
-            height: 50px;
-            width: 60px;
-        }
-
-        .mode .sun-moon i {
-            position: absolute;
-        }
-
-        .mode .sun-moon i.sun {
-            opacity: 0;
-        }
-
-        body.dark .mode .sun-moon i.sun {
-            opacity: 1;
-        }
-
-        body.dark .mode .sun-moon i.moon {
-            opacity: 0;
-        }
-
         .menu-bar .bottom-content .toggle-switch {
             position: absolute;
             right: 0;
-            height: 150%;
+            height: 120%;
             min-width: 30px;
             display: flex;
             align-items: center;
@@ -255,6 +249,7 @@
     <!-- Sidebar -->
     <nav class="sidebar close">
         <header>
+            <img src="{{ asset('images/ck.png') }}" alt="Logo" class="logo">
             <i class='bx bx-chevron-right toggle'></i>
         </header>
         <div class="menu-bar">
@@ -281,8 +276,7 @@
                 </ul>
             </div>
             <div class="bottom-content">
-                <div class="toggle-switch" style="margin-top: 10px;">
-                    <span class="switch"></span>
+                <div class="toggle-switch" style="margin-top: 30px;">
                 </div>
                 <div style="display: flex; flex-direction: column;">
                     <li class="" style="display: inline-block; vertical-align: middle; margin-top: 5px;">

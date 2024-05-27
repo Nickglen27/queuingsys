@@ -84,23 +84,29 @@
             font-weight: bold;
         }
 
-        .custom-button {
-            float: right;
-            margin-top: 10px;
+        .table {
+            font-size: 13px;
+            /* Smaller font size for table content */
         }
 
-        /* Custom Data Table Styling */
-        #example th,
-        #example td {
-            text-align: center;
-        }
-
-        thead th {
+        .table th {
             font-weight: bold;
+            text-align: center;
+            /* Center align text */
+            vertical-align: middle;
+            /* Center align vertically */
         }
 
-        .text-size-12 {
+        .table td {
+            text-align: center;
+            /* Center align text */
+            vertical-align: middle;
+            /* Center align vertically */
+        }
+
+        .btn {
             font-size: 12px;
+            /* Smaller font size for buttons */
         }
     </style>
 </head>
@@ -225,8 +231,8 @@
             <table id="Departments" class="table table-sm table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Department</th>
-                        <th>Transaction</th>
+                        <th style="font-size: 15px;">Department</th>
+                        <th style="font-size: 15px;">Transaction</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -298,7 +304,15 @@
                     departmentRows += `
                         <tr>
                             <td>${department.name}</td>
-                            <td><button class="btn btn-primary custom-button me-2 view-transaction-btn" data-department-id="${department.id}" data-bs-toggle="modal" data-bs-target="#viewTransactionsModal" style="float: left;">View Transaction</button></td>
+                            <td>
+    <button class="btn btn-primary custom-button me-2 view-transaction-btn" 
+            data-department-id="${department.id}" 
+            data-bs-toggle="modal" 
+            data-bs-target="#viewTransactionsModal" 
+            style="font-size: 13px; text-align: center;">
+        View Transaction
+    </button>
+</td>
                             <td><button class="btn btn-danger btn-sm" onclick="deleteDepartment('${department.name}')"><i class="fas fa-trash-alt"></i></button></td>
                         </tr>
                     `;
