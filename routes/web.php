@@ -7,7 +7,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FinanceDepartmentController;
 use App\Http\Controllers\AcademicDepartmentController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudTransController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TvController;
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -28,8 +31,22 @@ Route::get('/user', function () {
     return view('user');
 })->name('user');
 
+Route::get('/Department', function () {
+    return view('Department.index');
+});
+Route::get('/KioskInterface', function () {
+    return view('KioskInterface');
+});
+Route::get('/newad', function () {
+    return view('newad');
+});
+
+Route::get('/Tv', function () {
+    return view('Tv');
+});
 
 // Department routes
+Route::get('/department/{id}', [DepartmentController::class, 'index'])->name('department.index');
 Route::get('/departments/create', [DepartmentController::class, 'create'])->name('departments.create');
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
 Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
@@ -55,7 +72,19 @@ Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->
 Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Define route name for transactions.store
 Route::get('/transactions/by-department/{departmentId}', [TransactionController::class, 'getTransactionsByDepartment']);
 
-use App\Http\Controllers\Auth\Custom\CustomRegisterController;
+use App\Http\Controllers\Auth\UserController;
 
-Route::post('/register', [CustomRegisterController::class, 'register'])->name('user.store');
-Route::get('/registered-user', [CustomRegisterController::class, 'ShowUsers']);
+Route::post('/register', [UserController::class, 'register'])->name('user.store');
+Route::get('/registered-user', [UserController::class, 'ShowUsers']);
+
+
+Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);
+
+Route::get('/fetch-students', [StudentController::class, 'fetchStudents']);
+
+Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Define route name for transactions.store
+Route::get('/transactions/by-department/{departmentId}', [TransactionController::class, 'getTransactionsByDepartment']);
+
+Route::post('/store-details', [StudTransController::class, 'store']);
+
+Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);

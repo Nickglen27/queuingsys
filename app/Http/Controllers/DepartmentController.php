@@ -8,6 +8,27 @@ use App\Models\Transaction;
 
 class DepartmentController extends Controller
 {
+
+    public function index()
+    {
+        return view('department.index');
+    }
+
+
+    public function fetchDepartments()
+    
+    {
+        $departments = Department::all();
+
+        return response()->json([
+            'departments' => $departments
+        ]);
+    }
+
+
+
+
+
     /**
      * Store a newly created department in storage.
      *
