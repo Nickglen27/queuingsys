@@ -225,6 +225,13 @@
 
 
 $(document).ready(function() {
+    // Set up AJAX to include the CSRF token
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     // Make an AJAX request to fetch the student transactions
     $.ajax({
         url: '/fetch-stud-trans', // Adjust the URL as per your routing configuration
@@ -257,12 +264,42 @@ $(document).ready(function() {
                     }
                 ]
             });
+
+            // Bind click event to Call buttons
+            $('#studentTable').on('click', '.call', function() {
+                var studTransId = $(this).data('id');
+                callStudTrans(studTransId);
+            });
         },
         error: function(xhr, status, error) {
             console.error('Error fetching student transactions:', error);
         }
     });
+
+    function callStudTrans(studTransId) {
+        $.ajax({
+            url: '/call-stud-trans',
+            method: 'POST',
+            data: { id: studTransId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Trigger an event to update the TV display
+                    $(document).trigger('updateTVDisplay');
+                    console.log('Student transaction called successfully');
+                } else {
+                    console.error('Error calling student transaction:', response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error calling student transaction:', error);
+            }
+        });
+    }
 });
+
+
+
 
 
 

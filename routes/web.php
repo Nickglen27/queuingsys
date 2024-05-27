@@ -57,5 +57,4 @@ Route::get('/populate-queuing-table', [QueuingController::class, 'populateQueuin
 Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
 
 
-
-
+Route::post('/call-stud-trans', [StudTransController::class, 'callStudTrans'])->name('call-stud-trans');
