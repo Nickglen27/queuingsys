@@ -20,17 +20,14 @@
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
 
-    <!-- Google Fonts - Oregon -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
-
-
         .background-light {
-            background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rgba(0,212,255,1) 100%);
+            background: #0a2342;
         }
-        
+
         .navbar {
             height: 100px;
         }
@@ -59,88 +56,38 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rg
 
         .custom-button {
             float: right;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .timezone {
-            font-size: 30px;
-            font-family: 'Roboto', sans-serif;
+            font-size: 40px;
+            font-family: 'poppins', sans-serif;
             color: rgb(255, 255, 255);
             margin-right: 20px;
-            margin-top: 15px;
-        }
-
-        .queue-display {
-            margin: 20px;
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            font-size: 30px;
-            width: 100%;
-            /* Adjust the font size as needed */
-        }
-
-        .queue-display h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 60px;
-        }
-
-        .queue-list table {
-            width: 100%;
             margin-top: 10px;
-            text-align: left;
-            border-collapse: collapse;
         }
 
-        .queue-list table th,
-        .queue-list table td {
-            padding: 15px;
-            border: 1px solid #ced4da;
+        .white-box {
+            background-color: white;
+            width: 90%;
+            height: 550px;
+            margin: 50px auto;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .queue-list table th {
-            background-color: #e9ecef;
-        }
-
-        .now-serving {
-            background-color: #d1e7dd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .now-serving h1 {
-            font-size: 45px;
-        }
-
-        .now-serving table {
+        .custom-hr {
+            border: none;
+            height: 3px;
+            /* Height of the line */
+            background-color: #000;
+            /* Color of the line */
             width: 100%;
-            margin-top: 10px;
-            text-align: left;
+            /* Width of the line */
+            margin: 20px auto;
+            /* Center the line */
         }
-
-        .now-serving table th,
-        .now-serving table td {
-            padding: 25px;
-            text-align: left;
-            font-size: 27px;
-        }
-        .hidden-row {
-    display: none;
-}
-    
-        .container {
-    margin-left: 120px; /* Adjust the value as needed */    
-    }
-
-    #queuingTableBody {
-            font-size: 30px; /* Adjust the font size as needed */
-            font-weight: bold; /* Make the text bold */
-        }
-
     </style>
 </head>
 
@@ -156,52 +103,65 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rg
         </div>
     </nav>
 
-    <div class="container">
-        <div class="queue-display">
-            <h2>Queue Status</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="queue-list">
-                        <h3>Next Que</h3>
-                        <table id="queuingTable">
-                 <thead>
-                   <tr>
-                  <th>Name</th>
-                     <th>Priority Number</th>
-                       <th>Window</th>
-                 </tr>
-             </thead>
-         <tbody id="queuingTableBody">
-        <!-- Rows will be populated by jQuery -->
-            </tbody>
-            </table>
+    <div class="white-box">
+        <div class="container mt-4">
+            <!-- First row of cards -->
+            <div class="row justify-content-center">
+                <!-- Card 1 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
+                        <div class="card-body text-center">
+                            <!-- Icon and Title -->
+                            <h1 class="card-title"><b>Window 1</b></h1> <!-- Centered title -->
+                            <!-- Sample data -->
+                            <hr class="custom-hr">
+                            <h5 class="card-text">Priority Number:</h5>
+                            <h1 style="color: red"><b>28</b></h1>
+
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="now-serving">
-                        <h1>NOW SERVING</h1>
-                        <table>
-                        <tr>
-    <th>Name:</th>
-    <td id="now-serving-name"></td>
-</tr>
-<tr>
-    <th>Department:</th>
-    <td id="now-serving-department"></td>
-</tr>
-<tr>
-    <th>Transaction:</th>
-    <td id="now-serving-transaction"></td>
-</tr>
-<tr>
-    <th>Window:</th>
-    <td id="now-serving-window"></td>
-</tr>
-<tr>
-    <th>Priority Number:</th>
-    <td id="now-serving-priority"></td>
-</tr>
-                        </table>
+
+                <!-- Card 2 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                        <div class="card-body text-center">
+                            <!-- Icon and Title -->
+                            <h1 class="card-title"><b>Window 2</b></h1> <!-- Centered title -->
+                            <!-- Sample data -->
+                            <hr class="custom-hr">
+                            <h5 class="card-text">Priority Number:</h5>
+                            <h1 style="color: red"><b>13</b></h1>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                        <div class="card-body text-center">
+                            <!-- Icon and Title -->
+                            <h1 class="card-title"><b>Window 3</b></h1> <!-- Centered title -->
+                            <!-- Sample data -->
+                            <hr class="custom-hr">
+                            <h5 class="card-text">Priority Number:</h5>
+                            <h1 style="color: red"><b>43</b></h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                        <div class="card-body text-center">
+                            <!-- Icon and Title -->
+                            <h1 class="card-title"><b>Window 4</b></h1> <!-- Centered title -->
+                            <!-- Sample data -->
+                            <hr class="custom-hr">
+                            <h5 class="card-text">Priority Number:</h5>
+                            <h1 style="color: red"><b>52</b></h1>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -209,7 +169,8 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rg
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
     <!-- DataTables JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -219,103 +180,6 @@ background: linear-gradient(90deg, rgba(2,0,36,1) 2%, rgba(16,185,209,1) 46%, rg
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
-
-
-
-
-$(document).ready(function() {
-    let lastData = [];
-
-    function arraysEqual(a, b) {
-        if (a.length !== b.length) return false;
-        for (let i = 0; i < a.length; i++) {
-            if (a[i].studtrans_id !== b[i].studtrans_id) return false;
-        }
-        return true;
-    }
-
-    function populateTable() {
-        $.ajax({
-            url: '/api/queuing',
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (!arraysEqual(response, lastData)) {
-                    lastData = response;
-
-                    var tbody = $('#queuingTableBody');
-                    tbody.empty();
-
-                    response.forEach(function(item, index) {
-                        var row = $('<tr>').addClass('hidden-row'); // Add the hidden-row class for initial hiding
-
-                        if (item.stud_trans && item.stud_trans.student) {
-                            var student = item.stud_trans.student;
-                            var fullName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
-                            var priorityNum = item.priority_num;
-                            var windows = item.stud_trans.windows; // Get windows field
-
-                            row.append($('<td>').text(fullName));
-                            row.append($('<td>').text(priorityNum));
-                            row.append($('<td>').text(windows)); // Display windows field
-
-                            tbody.append(row);
-
-                            row.fadeIn('slow'); // Use jQuery fadeIn method for the slow fade-in effect
-                        }
-                    });
-
-                    // Populate the "Now Serving" section with the data of the first item when the table is initially rendered
-                    if (response.length > 0) {
-                        var firstItem = response[0];
-                        var student = firstItem.stud_trans.student;
-                        var fullName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
-                        var department = firstItem.stud_trans.department.name; // Access department name
-                        var transaction = firstItem.stud_trans.transaction.transaction_type; // Access transaction type
-                        var priorityNum = firstItem.priority_num;
-                        var windows = firstItem.stud_trans.windows; // Get windows field
-
-                        $('#now-serving-name').text(fullName);
-                        $('#now-serving-department').text(department);
-                        $('#now-serving-transaction').text(transaction);
-                        $('#now-serving-priority').text(priorityNum);
-                        $('#now-serving-window').text(windows); // Display windows in "Now Serving" section
-                    }
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Failed to fetch queuing data:", status, error);
-            }
-        });
-    }
-
-    // Populate the table when the page loads
-    populateTable();
-
-    // Optionally, set up polling to refresh the table periodically
-    setInterval(populateTable, 5000); // Refresh every 5 seconds
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // Function to display Beijing time
         function displayBeijingTime() {
             // Get current date and time in Beijing timezone
