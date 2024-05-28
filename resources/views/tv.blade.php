@@ -67,14 +67,29 @@
             margin-top: 10px;
         }
 
+        .card {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            /* Add shadow effect */
+            transition: box-shadow 0.3s ease;
+            /* Smooth transition on hover */
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+            /* Increase shadow on hover */
+        }
+
         .white-box {
-            background-color: white;
+            background-color: rgb(255, 255, 255);
             width: 90%;
-            height: 550px;
-            margin: 50px auto;
+            height: 650px;
+            margin: auto;
             border: 2px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            overflow: auto;
+            /* Add scroll if content exceeds */
         }
 
         .custom-hr {
@@ -87,6 +102,38 @@
             /* Width of the line */
             margin: 20px auto;
             /* Center the line */
+        }
+
+        .number-input {
+            border: none;
+            background-color: transparent;
+            color: red;
+            font-size: 36px;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+        }
+
+        .text-input {
+            border: none;
+            background-color: transparent;
+            color: rgb(21, 168, 21);
+            font-size: 30px;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+        }
+
+        table.dataTable thead .sorting,
+        table.dataTable thead .sorting_asc,
+        table.dataTable thead .sorting_desc {
+            background-color: #0a2342;
+            color: white;
+        }
+
+        #sampleTable th,
+        #sampleTable td {
+            text-align: center;
         }
     </style>
 </head>
@@ -113,11 +160,11 @@
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 1</b></h1> <!-- Centered title -->
+                            <input type="text" class="text-input" value="Cashier" readonly>
                             <!-- Sample data -->
                             <hr class="custom-hr">
-                            <h5 class="card-text">Priority Number:</h5>
-                            <h1 style="color: red"><b>28</b></h1>
-
+                            <h5 class="card-text"><b>Priority Number:</b></h5>
+                            <input type="text" class="number-input" value="53" readonly>
                         </div>
                     </div>
                 </div>
@@ -128,10 +175,12 @@
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 2</b></h1> <!-- Centered title -->
+                            <input type="text" class="text-input" value="Cashier" readonly>
+
                             <!-- Sample data -->
                             <hr class="custom-hr">
-                            <h5 class="card-text">Priority Number:</h5>
-                            <h1 style="color: red"><b>13</b></h1>
+                            <h5 class="card-text"><b>Priority Number:</b></h5>
+                            <input type="text" class="number-input" value="53" readonly>
 
                         </div>
                     </div>
@@ -143,10 +192,12 @@
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 3</b></h1> <!-- Centered title -->
+                            <input type="text" class="text-input" value="Cashier" readonly>
+
                             <!-- Sample data -->
                             <hr class="custom-hr">
-                            <h5 class="card-text">Priority Number:</h5>
-                            <h1 style="color: red"><b>43</b></h1>
+                            <h5 class="card-text"><b>Priority Number:</b></h5>
+                            <input type="text" class="number-input" value="53" readonly>
                         </div>
                     </div>
                 </div>
@@ -157,16 +208,60 @@
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 4</b></h1> <!-- Centered title -->
+                            <input type="text" class="text-input" value="Cashier" readonly>
                             <!-- Sample data -->
                             <hr class="custom-hr">
-                            <h5 class="card-text">Priority Number:</h5>
-                            <h1 style="color: red"><b>52</b></h1>
+                            <h5 class="card-text"><b>Priority Number:</b></h5>
+                            <input type="text" class="number-input" value="53" readonly>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- DataTable -->
+            <table id="sampleTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Transaction</th>
+                        <th>Priority Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>Finance</td>
+                        <td>Deposit</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>HR</td>
+                        <td>Recruitment</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Michael Brown</td>
+                        <td>IT</td>
+                        <td>Support</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Sarah Johnson</td>
+                        <td>Sales</td>
+                        <td>Customer Service</td>
+                        <td>58</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
@@ -191,6 +286,10 @@
 
         // Update Beijing time every second
         setInterval(displayBeijingTime, 1000);
+
+        $(document).ready(function() {
+            $('#sampleTable').DataTable();
+        });
     </script>
 
 </body>

@@ -150,7 +150,6 @@
                 <th style="width: 30%;">Transaction</th>
                 <th style="width: 25%;">Department</th>
                 <th style="width: 25%;">Window</th>
-    
                 <th style="width: 10%;">Actions</th>
             </tr>
         </thead>
