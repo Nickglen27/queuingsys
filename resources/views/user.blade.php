@@ -187,7 +187,19 @@
                 </tbody>
             </table>
         </div>
-
+        <table id="TransactionTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student Name</th>
+                    <th>Transaction Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated here by DataTables -->
+            </tbody>
+        </table>
         <!-- Include necessary scripts -->
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -223,7 +235,6 @@
                 // Function to display users in the DataTable
                 function displayUsers(users) {
                     $('#user_dataTable').DataTable().clear().destroy(); // Destroy existing DataTable and clear its data
-
                     $('#user_dataTable').DataTable({
                         data: users,
                         columns: [{

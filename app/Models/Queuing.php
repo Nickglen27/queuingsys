@@ -14,8 +14,10 @@ class Queuing extends Model
 
     // Define the fillable properties
     protected $fillable = [
+        'department_id',
         'studtrans_id',
         'priority_num',
+        'windows',
         'guest_id'
     ];
 
@@ -33,5 +35,9 @@ class Queuing extends Model
     public function guest()
     {
         return $this->belongsTo(Guest::class, 'guest_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

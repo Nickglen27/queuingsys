@@ -10,12 +10,13 @@ class CreateQueuingsTable extends Migration
     {
         Schema::create('queuings', function (Blueprint $table) {
             $table->id();
-            // Define the schema for the 'queuings' table
             $table->unsignedBigInteger('priority_num');
+            $table->unsignedBigInteger('department_id'); // Add department_id column
             $table->unsignedBigInteger('studtrans_id');
             $table->foreign('studtrans_id')->references('id')->on('studtrans')->onDelete('cascade');
-            // $table->unsignedBigInteger('guest_id')->nullable();
-            // $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
+            $table->unsignedBigInteger('guest_id')->nullable();
+            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
+            $table->unsignedBigInteger('windows')->nullable(); // Add windows column
             $table->timestamps();
         });
     }

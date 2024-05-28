@@ -9,6 +9,7 @@
 
     <title>Department</title>
     <!-- Bootstrap CSS -->
+    <!-- Include necessary stylesheets -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -17,109 +18,109 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    <!-- Select2 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'
+        rel='stylesheet'>
 
-    <!-- Google Fonts - Oregon -->
-    <link href="https://fonts.googleapis.com/css2?family=Oregon&display=swap" rel="stylesheet">
+    <head>
 
-    <style>
-        .navbar {
-            height: 100px;
-        }
-
-        @keyframes bounce {
-            0% {
-                transform: translateY(0);
+        <style>
+            .navbar {
+                height: 100px;
             }
 
-            50% {
-                transform: translateY(-10px);
+            @keyframes bounce {
+                0% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+
+                100% {
+                    transform: translateY(0);
+                }
             }
 
-            100% {
-                transform: translateY(0);
+            .navbar-brand {
+                font-family: 'Oregon', sans-serif;
+                animation: bounce 2s infinite;
+                font-size: 28px;
+                font-weight: bold;
+                color: rgb(255, 253, 253);
+                /* Added this line to change text color */
             }
-        }
 
-        .navbar-brand {
-            font-family: 'Oregon', sans-serif;
-            animation: bounce 2s infinite;
-            font-size: 28px;
-            font-weight: bold;
-            color: rgb(255, 253, 253);
-            /* Added this line to change text color */
-        }
+            .custom-button {
+                float: right;
+                margin-top: 10px;
+            }
 
-        .custom-button {
-            float: right;
-            margin-top: 10px;
-        }
+            .timezone {
+                font-size: 18px;
+                color: rgb(255, 255, 255);
+                margin-right: 20px;
+                margin-top: 15px;
+            }
 
-        .timezone {
-            font-size: 18px;
-            color: rgb(255, 255, 255);
-            margin-right: 20px;
-            margin-top: 15px;
-        }
+            .archive-icon {
+                font-size: 24px;
+                color: #5e0b0e;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
 
-        .archive-icon {
-            font-size: 24px;
-            color: #5e0b0e;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+            .archive-container {
+                text-align: left;
+                margin-bottom: 20px;
+            }
 
-        .archive-container {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+            /* Center text in table */
+            #dataTable th,
+            #dataTable td {
+                text-align: center;
+            }
 
-        /* Center text in table */
-        #dataTable th,
-        #dataTable td {
-            text-align: center;
-        }
+            /* Adjust width of table headers */
+            #dataTable th {
+                width: 20%;
+                /* Adjust width as needed */
+            }
 
-        /* Adjust width of table headers */
-        #dataTable th {
-            width: 20%;
-            /* Adjust width as needed */
-        }
-
-        .green-header {
-            background-color: green;
-        }
+            .green-header {
+                background-color: green;
+            }
 
 
 
-        .btn-group {
-            display: flex;
-            gap: 5px;
-            /* Adjust the gap between buttons as needed */
-        }
+            .btn-group {
+                display: flex;
+                gap: 5px;
+                /* Adjust the gap between buttons as needed */
+            }
 
-        .btn-yellow {
-            background-color: yellow;
-            border-color: yellow;
-            color: black;
-        }
+            .btn-yellow {
+                background-color: yellow;
+                border-color: yellow;
+                color: black;
+            }
 
-        .btn-blue {
-            background-color: blue;
-            border-color: blue;
-            color: white;
-        }
+            .btn-blue {
+                background-color: blue;
+                border-color: blue;
+                color: white;
+            }
 
 
 
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            /* Adjust the gap between buttons as needed */
-        }
-    </style>
-</head>
+            .action-buttons {
+                display: flex;
+                gap: 5px;
+                /* Adjust the gap between buttons as needed */
+            }
+        </style>
+    </head>
 
 <body style="background-color: #ffffff;">
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5e0b0e;">
@@ -127,9 +128,6 @@
             <div class="navbar-brand" href="#">
                 <h1>{{ Auth::user()->department->name }} - Window: {{ Auth::user()->window }}</h1>
             </div>
-
-
-
             <strong>
                 <div class="timezone"><span id="beijing-time"></span></div>
             </strong>
@@ -157,22 +155,21 @@
                 </div>
             </div>
         </div>
-        <table id="studentTable" class="table table-striped table-bordered">
+        <table id="TransactionTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th style="width: 5%;">#</th>
-                    <th style="width: 30%;">Name</th>
-                    <th style="width: 30%;">Transaction</th>
-                    <th style="width: 25%;">Department</th>
-                    {{-- <th style="width: 25%;">Window</th> --}}
-                    <th style="width: 10%;">Actions</th>
+                    <th class="text-center">Priority No.</th>
+                    <th class="text-center">Student Name</th>
+                    <th class="text-center">Transaction Type</th>
+                    <th class="text-center">Actions</th>
+
                 </tr>
             </thead>
             <tbody>
-                <!-- Data will be populated here by JavaScript -->
+                <!-- Data will be populated here by DataTables -->
             </tbody>
         </table>
-        </table>
+
     </div>
 
     <!-- Modal for Archiving -->
@@ -228,6 +225,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -235,227 +235,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Set up AJAX to include the CSRF token
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            // Make an AJAX request to fetch the student transactions
-            $.ajax({
-                url: '/fetch-stud-trans', // Adjust the URL as per your routing configuration
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    // Check the console for the response structure
-                    console.log(data);
-
-                    // Initialize the DataTable with fetched data
-                    var dataTable = $('#studentTable').DataTable({
-                        data: data,
-                        columns: [{
-                                data: null,
-                                className: 'text-center',
-                                render: (data, type, row, meta) => meta.row + 1
-                            },
-                            {
-                                data: null,
-                                className: 'text-center',
-                                render: data =>
-                                    `${data.student.Firstname} ${data.student.Middlename} ${data.student.Lastname}`
-                            },
-                            {
-                                data: 'transaction.transaction_type',
-                                className: 'text-center',
-                                defaultContent: 'N/A'
-                            },
-                            {
-                                data: 'department.name',
-                                className: 'text-center'
-                            },
-                            {
-                                data: 'windows',
-                                className: 'text-center'
-                            }, // Corrected field name to 'windows'
-                            {
-                                data: null,
-                                className: 'text-center',
-                                render: function(data, type, row) {
-                                    return `
-                                <div class="action-buttons">
-                                    <button class="btn btn-primary call" data-id="${row.id}">Call</button>
-                                    <button class="btn btn-secondary archive" data-id="${row.id}">Archive</button>
-                                    <button class="btn btn-success done" data-id="${row.id}">Done</button>
-                                </div>`;
-                                }
-                            }
-                        ]
-                    });
-
-                    // Bind click event to Call buttons
-                    $('#studentTable').on('click', '.call', function() {
-                        var studTransId = $(this).data('id');
-                        callStudTrans(studTransId);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching student transactions:', error);
-                }
-            });
-
-            function callStudTrans(studTransId) {
+            // Function to fetch transactions
+            function fetchTransactions() {
                 $.ajax({
-                    url: '/call-stud-trans',
-                    method: 'POST',
-                    data: {
-                        id: studTransId
-                    },
+                    url: '/FetchTransactions',
+                    method: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        if (response.success) {
-                            // Trigger an event to update the TV display
-                            $(document).trigger('updateTVDisplay');
-                            console.log('Student transaction called successfully');
-                        } else {
-                            console.error('Error calling student transaction:', response.message);
-                        }
+                        console.log('Transaction data retrieved successfully:', response);
+                        initializeDataTable(response.data);
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error calling student transaction:', error);
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching transaction data:', textStatus, errorThrown);
                     }
                 });
             }
+
+            // Function to initialize the DataTable
+            function initializeDataTable(transactions) {
+                $('#TransactionTable').DataTable().clear()
+                    .destroy(); // Destroy existing DataTable and clear its data
+                $('#TransactionTable').DataTable({
+                    data: transactions,
+                    columns: [{
+                            "data": "priority_num",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "student.Firstname",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": "transaction.transaction_type",
+                            "className": "text-center"
+                        },
+                        {
+                            "data": null,
+                            "title": "Actions",
+                            "render": function(data, type, row) {
+                                return '<div class="text-center">' +
+                                    '<button class="btn btn-primary mr-2" style="width: 100px;"><i class="fa fa-phone"></i></button>' +
+                                    '<button class="btn btn-success mr-2" style="width: 100px;"><i class="fa fa-check"></i></button>' +
+                                    '<button class="btn btn-danger mr-2" style="width: 100px;"><i class="fa fa-archive"></i></button>' +
+                                    '</div>';
+                            }
+                        }
+                    ]
+                });
+            }
+
+            // Call fetchTransactions initially when the page loads
+            fetchTransactions();
+
+            // Refresh the data every 5 seconds
+            // setInterval(fetchTransactions, 5000); // 5000 milliseconds = 5 seconds
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // $(document).ready(function() {
-        //     function populateTable() {
-        //         $.ajax({
-        //             url: '/fetch-studtrans',
-        //             method: 'GET',
-        //             dataType: 'json',
-        //             success: function(response) {
-        //                 var tbody = $('#dataTable tbody');
-        //                 tbody.empty();
-
-        //                 response.forEach(function(item, index) {
-        //                     var row = $('<tr>');
-
-        //                     row.append($('<td>').text(index + 1));
-        //                     row.append($('<td>').text(item.student.Firstname + ' ' + item.student.Middlename + ' ' + item.student.Lastname));
-        //                     row.append($('<td>').text(item.transaction.transaction_type));
-        //                     row.append($('<td>').text(item.department.name));
-        //                     row.append($('<td>').text('Window')); // Replace with actual window data if available
-
-        //                     // Create buttons container
-        //                     var buttonsContainer = $('<div class="btn-group" role="group">');
-        //                     var callButton = $('<button class="btn btn-yellow">').text('Call');
-        //                     var archiveButton = $('<button class="btn btn-blue">').text('Archive');
-        //                     var doneButton = $('<button class="btn btn-success">').text('Done');
-
-        //                     // Append buttons to the buttons container
-        //                     buttonsContainer.append(callButton).append(archiveButton).append(doneButton);
-
-        //                     // Create a table cell and append the buttons container
-        //                     var buttonsCell = $('<td>').append(buttonsContainer);
-        //                     row.append(buttonsCell);
-
-        //                     tbody.append(row);
-        //                 });
-        //             },
-        //             error: function(xhr, status, error) {
-        //                 console.error("Failed to fetch studtrans:", status, error);
-        //             }
-        //         });
-        //     }
-
-        //     populateTable();
-        // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         // Function to display Beijing time
@@ -470,10 +304,10 @@
         // Update Beijing time every second
         setInterval(displayBeijingTime, 1000);
 
-        // Initialize DataTable
-        $(document).ready(function() {
-            $('#dataTable').DataTable();
-        });
+        // // Initialize DataTable
+        // $(document).ready(function() {
+        //     $('#dataTable').DataTable();
+        // });
     </script>
 
 </body>

@@ -26,7 +26,7 @@ class StudTrans extends Model
      */
     public function student()
     {
-        return $this->belongsTo(Student::class, 'student_id', 'Stud_Id');
+        return $this->belongsTo(Student::class);
     }
 
     /**
@@ -49,25 +49,8 @@ class StudTrans extends Model
      * The "booted" method of the model.
      * Listen for the `created` event and create a Queuing record.
      */
-    protected static function booted()
+    public function getWindowAttribute()
     {
-        static::created(function ($studTrans) {
-            // Find the current maximum priority_num in the queuing table
-            $maxPriorityNum = Queuing::max('priority_num');
-    
-            // Increment the priority_num by 1 for the new record
-            $newPriorityNum = is_null($maxPriorityNum) ? 1 : $maxPriorityNum + 1;
-    
-            // Calculate the window number based on the new priority_num
-            $window = ($newPriorityNum % 3) + 1; // Assuming 3 windows, adjust as needed
-    
-            // Create a new Queuing record with the incremented priority_num and window
-            Queuing::create([
-                'studtrans_id' => $studTrans->id,
-                'priority_num' => $newPriorityNum,
-                'guest_id' => null, // Allow guest_id to be null
-                'windows' => $window // Fixed field name here
-            ]);
-        });
+        return $this->windows;
     }
 }

@@ -88,3 +88,4 @@ Route::get('/transactions/by-department/{departmentId}', [TransactionController:
 Route::post('/store-details', [StudTransController::class, 'store']);
 
 Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
+Route::get('/FetchTransactions', [StudTransController::class, 'FetchTransactions']);
