@@ -234,6 +234,22 @@
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
+        // Define the functions to handle the button clicks
+        function handleCall(id) {
+            console.log('Call button clicked for row with id: ' + id);
+            // Add your handling code here
+        }
+
+        function handleCheck(id) {
+            console.log('Check button clicked for row with id: ' + id);
+            // Add your handling code here
+        }
+
+        function handleArchive(id) {
+            console.log('Archive button clicked for row with id: ' + id);
+            // Add your handling code here
+        }
+
         $(document).ready(function() {
             // Function to fetch transactions
             function fetchTransactions() {
@@ -251,7 +267,6 @@
                 });
             }
 
-            // Function to initialize the DataTable
             function initializeDataTable(transactions) {
                 $('#TransactionTable').DataTable().clear()
                     .destroy(); // Destroy existing DataTable and clear its data
@@ -274,9 +289,12 @@
                             "title": "Actions",
                             "render": function(data, type, row) {
                                 return '<div class="text-center">' +
-                                    '<button class="btn btn-primary mr-2" style="width: 100px;"><i class="fa fa-phone"></i></button>' +
-                                    '<button class="btn btn-success mr-2" style="width: 100px;"><i class="fa fa-check"></i></button>' +
-                                    '<button class="btn btn-danger mr-2" style="width: 100px;"><i class="fa fa-archive"></i></button>' +
+                                    '<button class="btn btn-primary mr-2" style="width: 100px;" onclick="handleStatus(' +
+                                    row.id + ')"><i class="fa fa-phone"></i></button>' +
+                                    '<button class="btn btn-success mr-2" style="width: 100px;" onclick="isdone(' +
+                                    row.id + ')"><i class="fa fa-check"></i></button>' +
+                                    '<button class="btn btn-danger mr-2" style="width: 100px;" onclick="handleArchive(' +
+                                    row.id + ')"><i class="fa fa-archive"></i></button>' +
                                     '</div>';
                             }
                         }
@@ -308,6 +326,49 @@
         // $(document).ready(function() {
         //     $('#dataTable').DataTable();
         // });
+        function handleStatus(id) {
+            $.ajax({
+                url: '/update-status/' + id,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    is_call: 1, // Always set is_call to 1
+
+                },
+                success: function(response) {
+                    // Handle success response, if needed
+                    console.log(response);
+                },
+                error: function(xhr) {
+                    // Handle error response, if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        function isdone(id) {
+            // Perform AJAX request to update the status
+            $.ajax({
+                url: '/update-status/' + id,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    is_done: 1 // Set is_done to 1 for marking as done
+                },
+                success: function(response) {
+                    // Handle success response, if needed
+                    console.log(response);
+                    // Optionally, provide feedback to the user
+                    alert('Task marked as done successfully!');
+                },
+                error: function(xhr) {
+                    // Handle error response, if needed
+                    console.error(xhr.responseText);
+                    // Optionally, provide feedback to the user
+                    alert('Error marking task as done. Please try again.');
+                }
+            });
+        }
     </script>
 
 </body>

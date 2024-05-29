@@ -11,6 +11,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudTransController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TvController;
+use App\Http\Controllers\QueuingController;
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -89,3 +90,7 @@ Route::post('/store-details', [StudTransController::class, 'store']);
 
 Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
 Route::get('/FetchTransactions', [StudTransController::class, 'FetchTransactions']);
+
+Route::post('/update-status/{id}', [QueuingController::class, 'updateStatus']);
+
+Route::get('/get-is-call-status/{window}', [QueuingController::class, 'getIsCallStatus']);

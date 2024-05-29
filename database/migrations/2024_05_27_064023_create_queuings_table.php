@@ -17,9 +17,13 @@ class CreateQueuingsTable extends Migration
             $table->unsignedBigInteger('guest_id')->nullable();
             $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
             $table->unsignedBigInteger('windows')->nullable(); // Add windows column
+            $table->boolean('is_call')->default(false); // Add is_call column
+            $table->boolean('is_done')->default(false); // Add is_done column
+            $table->boolean('is_archive')->default(false); // Add is_archive column
             $table->timestamps();
         });
     }
+    
 
     public function down()
     {

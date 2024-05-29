@@ -18,7 +18,10 @@ class Queuing extends Model
         'studtrans_id',
         'priority_num',
         'windows',
-        'guest_id'
+        'guest_id',
+        'is_call', // Add is_call column to fillable
+        'is_done', // Add is_done column to fillable
+        'is_archive', // Add is_archive column to fillable
     ];
 
     /**

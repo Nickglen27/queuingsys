@@ -160,136 +160,136 @@
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 1</b></h1> <!-- Centered title -->
-                            <input type="text" class="text-input" value="" readonly>
+                            <!-- Display department_id and priority_num -->
+                            <div id="department_and_priority_1"></div>
                             <!-- Sample data -->
                             <hr class="custom-hr">
                             <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" class="number-input" value="" readonly>
+                            <input type="text" id="priority_num_1" class="number-input" value="" readonly>
                         </div>
                     </div>
                 </div>
-
-                <!-- Card 2 -->
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 2</b></h1> <!-- Centered title -->
-                            <input type="text" class="text-input" value="" readonly>
-
+                            <!-- Display department_id and priority_num -->
+                            <div id="department_and_priority_2"></div>
                             <!-- Sample data -->
                             <hr class="custom-hr">
                             <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" class="number-input" value="" readonly>
-
+                            <input type="text" id="priority_num_2" class="number-input" value="" readonly>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 3</b></h1> <!-- Centered title -->
-                            <input type="text" class="text-input" value="" readonly>
-
+                            <!-- Display department_id and priority_num -->
+                            <div id="department_and_priority_3"></div>
                             <!-- Sample data -->
                             <hr class="custom-hr">
                             <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" class="number-input" value="" readonly>
+                            <input type="text" id="priority_num_3" class="number-input" value="" readonly>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 4 -->
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card text-dark bg-info mb-5" style="max-width: 20rem;">
+                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 4</b></h1> <!-- Centered title -->
-                            <input type="text" class="text-input" value="" readonly>
+                            <!-- Display department_id and priority_num -->
+                            <div id="department_and_priority_4"></div>
                             <!-- Sample data -->
                             <hr class="custom-hr">
                             <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" class="number-input" value="" readonly>
+                            <input type="text" id="priority_num_4" class="number-input" value="" readonly>
                         </div>
                     </div>
                 </div>
+                <!-- DataTable -->
+                <table id="sampleTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Transaction</th>
+                            <th>Priority Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
             </div>
-            <!-- DataTable -->
-            <table id="sampleTable" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Transaction</th>
-                        <th>Priority Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>Finance</td>
-                        <td>Deposit</td>
-                        <td>58</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jane Smith</td>
-                        <td>HR</td>
-                        <td>Recruitment</td>
-                        <td>58</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Michael Brown</td>
-                        <td>IT</td>
-                        <td>Support</td>
-                        <td>58</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Sarah Johnson</td>
-                        <td>Sales</td>
-                        <td>Customer Service</td>
-                        <td>58</td>
-                    </tr> --}}
-                </tbody>
-            </table>
         </div>
-    </div>
 
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-        // Function to display Beijing time
-        function displayBeijingTime() {
-            // Get current date and time in Beijing timezone
-            var beijingTime = new Date().toLocaleString("en-US", {
-                timeZone: "Asia/Shanghai"
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- DataTables JavaScript -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Select2 JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        <script>
+            // Function to display Beijing time
+            function displayBeijingTime() {
+                // Get current date and time in Beijing timezone
+                var beijingTime = new Date().toLocaleString("en-US", {
+                    timeZone: "Asia/Shanghai"
+                });
+                document.getElementById("beijing-time").innerHTML = beijingTime;
+            }
+
+            // Update Beijing time every second
+            setInterval(displayBeijingTime, 1000);
+
+            $(document).ready(function() {
+                $('#sampleTable').DataTable();
             });
-            document.getElementById("beijing-time").innerHTML = beijingTime;
-        }
+            // Function to fetch and display department_id and priority_num
+            function displayDepartmentAndPriority() {
+                // Iterate over each window
+                for (let i = 1; i <= 4; i++) {
+                    // Make a GET request to fetch department_id and priority_num
+                    $.get('/get-is-call-status/' + i, function(response) {
+                        if (response.department_id && response.priority_num) {
+                            // Update the DOM with the fetched department_id
+                            $('#department_and_priority_' + i).html('<p><strong>Department ID:</strong> ' + response
+                                .department_id);
 
-        // Update Beijing time every second
-        setInterval(displayBeijingTime, 1000);
+                            // Update the priority_num input field
+                            $('#priority_num_' + i).val(response.priority_num);
+                        } else {
+                            // If no data is returned, show a message
+                            $('#department_and_priority_' + i).html('<p>No data available</p>');
 
-        $(document).ready(function() {
-            $('#sampleTable').DataTable();
-        });
-    </script>
+                            // Remove the value of the priority_num input field
+                            $('#priority_num_' + i).val('');
+                        }
+                    });
+                }
+            }
+
+            // Call the function to display department_id and priority_num initially
+            $(document).ready(function() {
+                displayDepartmentAndPriority();
+
+                // Call the function every 5 seconds using setInterval
+                setInterval(displayDepartmentAndPriority, 5000); // 5000 milliseconds = 5 seconds
+            });
+        </script>
 
 </body>
 
