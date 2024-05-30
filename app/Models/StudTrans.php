@@ -27,6 +27,8 @@ class StudTrans extends Model
     public function student()
     {
         return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class, 'student_id');
+
     }
 
     /**
@@ -53,4 +55,5 @@ class StudTrans extends Model
     {
         return $this->windows;
     }
+    
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Queuing;
 use App\Models\StudTrans;
+use App\Models\Department;
+use Illuminate\Support\Facades\Response;
+
 
 class QueuingController extends Controller
 {
@@ -54,22 +57,54 @@ class QueuingController extends Controller
 }
 
 
- 
-    public function getIsCallStatus($window)
+public function getIsCallStatus($windows)
 {
-    // Find the Queuing record for the specified window with is_call status true and is_done not equal to 1
-    $queuing = Queuing::where('windows', $window)->where('is_call', true)->where('is_done', '!=', 1)->first();
-
-    // If the Queuing record exists and is_call is true, and is_done is not equal to 1, return department_id and priority_num
-    if ($queuing) {
-        return response()->json([
-            'department_id' => $queuing->department_id,
-            'priority_num' => $queuing->priority_num
-        ]);
-    } else {
-        // If no Queuing record is found for the window with is_call true and is_done not equal to 1, return an empty response
-        return response()->json([]);
+    // Convert $windows to an array if it's not already an array
+    if (!is_array($windows)) {
+        $windows = [$windows];
     }
+
+    // Initialize arrays to store unique department names, corresponding priority_nums, and studtrans_ids
+    $uniqueDepartments = [];
+    $priorityNums = [];
+    $studtransIds = [];
+
+    // Iterate through each window
+    foreach ($windows as $window) {
+        // Fetch all records for the specified window where is_call is true, is_done is not equal to 1, and studtrans_id is not null
+        $queuings = Queuing::where('windows', $window)
+                            ->where('is_call', true)
+                            ->where('is_done', '!=', 1)
+                            ->whereNotNull('studtrans_id')
+                            ->get();
+
+        // Iterate through the queuings for the current window
+        foreach ($queuings as $queuing) {
+            // Fetch the department associated with the department ID
+            $department = Department::find($queuing->department_id);
+
+            // Check if department name is already processed
+            if (!in_array($department->name, $uniqueDepartments)) {
+                // Store the unique department name
+                $uniqueDepartments[] = $department->name;
+                // Initialize an array to store priority_nums for each department name
+                $priorityNums[$department->name] = [];
+                // Initialize an array to store studtrans_ids for each department name
+                $studtransIds[$department->name] = [];
+            }
+            // Store the priority_num and studtrans_id for the current department name
+            $priorityNums[$department->name][] = $queuing->priority_num;
+            $studtransIds[$department->name][] = $queuing->studtrans_id;
+        }
+    }
+
+    // Return the unique department names along with corresponding priority_nums and studtrans_ids
+    return response()->json([
+        'windows' => $windows,
+        'departments' => $uniqueDepartments, // Change 'department_ids' to 'departments'
+        'priority_nums' => $priorityNums, // Add priority_nums to the response
+        'studtrans_ids' => $studtransIds // Add studtrans_ids to the response
+    ]);
 }
 
 }
