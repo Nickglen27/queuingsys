@@ -128,8 +128,11 @@ class StudTransController extends Controller
                 $query->where('department_id', $user->department_id)
                     ->where('windows', $user->window);
             })
-                ->orderBy('priority_num')
-                ->get();
+            ->whereHas('studTrans', function ($query) {
+                $query->where('is_done', '!=', 1);
+            })
+            ->orderBy('priority_num')
+            ->get();
     
             // Initialize an array to store the transaction data
             $transactions = [];
@@ -140,13 +143,10 @@ class StudTransController extends Controller
                 $studTrans = StudTrans::with('student', 'transaction')
                     ->find($queuedTransaction->studtrans_id);
     
-                // If a StudTrans record is found, add it to the transactions array
-                if ($studTrans) {
-                    // Add the priority_num to the transaction data
-                    $transactionData = $studTrans->toArray();
-                    $transactionData['priority_num'] = $queuedTransaction->priority_num;
-                    $transactions[] = $transactionData;
-                }
+                // Add the priority_num to the transaction data
+                $transactionData = $studTrans->toArray();
+                $transactionData['priority_num'] = $queuedTransaction->priority_num;
+                $transactions[] = $transactionData;
             }
     
             // Return the transactions data as a JSON response

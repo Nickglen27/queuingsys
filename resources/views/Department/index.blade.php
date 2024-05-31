@@ -259,7 +259,11 @@
                     dataType: 'json',
                     success: function(response) {
                         console.log('Transaction data retrieved successfully:', response);
-                        initializeDataTable(response.data);
+                        // Filter out transactions where is_done is equal to 1
+                        var filteredData = response.data.filter(function(transaction) {
+                            return transaction.is_done !== 1;
+                        });
+                        initializeDataTable(filteredData);
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         console.error('Error fetching transaction data:', textStatus, errorThrown);
@@ -306,7 +310,7 @@
             fetchTransactions();
 
             // Refresh the data every 5 seconds
-            // setInterval(fetchTransactions, 5000); // 5000 milliseconds = 5 seconds
+            setInterval(fetchTransactions, 5000); // 5000 milliseconds = 5 seconds
         });
 
 
@@ -356,8 +360,10 @@
                     is_done: 1 // Set is_done to 1 for marking as done
                 },
                 success: function(response) {
-                    // Handle success response, if needed
+                    // Handle success response
                     console.log(response);
+                    // Remove the row from DataTable
+                    removeRowFromDataTable(id);
                     // Optionally, provide feedback to the user
                     alert('Task marked as done successfully!');
                 },
@@ -368,6 +374,18 @@
                     alert('Error marking task as done. Please try again.');
                 }
             });
+        }
+
+        // Function to remove the row from DataTable
+        function removeRowFromDataTable(id) {
+            // Get DataTable instance
+            var dataTable = $('#TransactionTable').DataTable();
+            // Find the row index by data attribute 'id'
+            var rowIndex = dataTable.row($('#TransactionTable tbody tr').filter(function() {
+                return $(this).data('id') === id;
+            })).index();
+            // Remove the row from DataTable
+            dataTable.row(rowIndex).remove().draw();
         }
     </script>
 
