@@ -67,29 +67,17 @@
             margin-top: 10px;
         }
 
-        .card {
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-            /* Add shadow effect */
-            transition: box-shadow 0.3s ease;
-            /* Smooth transition on hover */
-        }
-
-        .card:hover {
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
-            /* Increase shadow on hover */
-        }
-
         .white-box {
-            background-color: rgb(255, 255, 255);
+            background-color: white;
             width: 90%;
             height: 650px;
             margin: auto;
             border: 2px solid #ccc;
-            border-radius: 20px;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
             overflow: auto;
-            /* Add scroll if content exceeds */
+            /* Enable scrolling */
         }
 
         .custom-hr {
@@ -100,7 +88,7 @@
             /* Color of the line */
             width: 100%;
             /* Width of the line */
-            margin: 20px auto;
+            margin: auto;
             /* Center the line */
         }
 
@@ -108,7 +96,7 @@
             border: none;
             background-color: transparent;
             color: red;
-            font-size: 36px;
+            font-size: 45px;
             font-weight: bold;
             width: 100%;
             text-align: center;
@@ -117,24 +105,20 @@
         .text-input {
             border: none;
             background-color: transparent;
-            color: rgb(21, 168, 21);
-            font-size: 30px;
+            color: rgb(233, 253, 10);
+            font-size: 25px;
             font-weight: bold;
             width: 100%;
             text-align: center;
         }
 
-        table.dataTable thead .sorting,
-        table.dataTable thead .sorting_asc,
-        table.dataTable thead .sorting_desc {
-            background-color: #0a2342;
-            color: white;
+        .next-queuing {
+            font-size: 25px;
+            text-align: left;
+            height: 20px;
         }
 
-        #sampleTable th,
-        #sampleTable td {
-            text-align: center;
-        }
+        
     </style>
 </head>
 
@@ -155,13 +139,12 @@
             <!-- First row of cards -->
             <div class="row justify-content-center">
                 <!-- Card 1 -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
+                <div class="col-lg-3 col-md-1 mb-7">
+                    <div class="card text-dark bg-info mb-2" style="max-width: 20rem;">
                         <div class="card-body text-center">
                             <!-- Icon and Title -->
                             <h1 class="card-title"><b>Window 1</b></h1> <!-- Centered title -->
                             <input type="text" class="text-input" value="Cashier" readonly>
-                            <!-- Sample data -->
                             <hr class="custom-hr">
                             <h5 class="card-text"><b>Priority Number:</b></h5>
                             <input type="text" class="number-input" value="53" readonly>
@@ -217,18 +200,24 @@
                     </div>
                 </div>
             </div>
+
+
+            <p class="next-queuing"><b>NEXT QUEUING</b></p>
+
+
+
             <!-- DataTable -->
             <table id="sampleTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Transaction</th>
-                        <th>Priority Number</th>
+                        <th style="width: 5%; text-align: center;">#</th>
+                        <th style="width: 25%; text-align: center;">Name</th>
+                        <th style="width: 25%; text-align: center;">Department</th>
+                        <th style="width: 25%; text-align: center;">Transaction</th>
+                        <th style="width: 15%; text-align: center;">Priority Number</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     <tr>
                         <td>1</td>
                         <td>John Doe</td>
@@ -257,6 +246,48 @@
                         <td>Customer Service</td>
                         <td>58</td>
                     </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Emily Davis</td>
+                        <td>Marketing</td>
+                        <td>Advertising</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>David Wilson</td>
+                        <td>Legal</td>
+                        <td>Contracts</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>David Wilson</td>
+                        <td>Legal</td>
+                        <td>Contracts</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>David Wilson</td>
+                        <td>Legal</td>
+                        <td>Contracts</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>David Wilson</td>
+                        <td>Legal</td>
+                        <td>Contracts</td>
+                        <td>58</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>David Wilson</td>
+                        <td>Legal</td>
+                        <td>Contracts</td>
+                        <td>58</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -270,11 +301,31 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
+        $(document).ready(function() {
+        $('#sampleTable').DataTable({
+            paging: false, // Disable paging
+            lengthChange: false, // Hide the page length control
+            searching: false, // Disable searching
+            ordering: true, // Enable column sorting
+            info: false, // Hide the information display
+            autoWidth: false, // Disable automatic column width calculation
+            pageLength: 4, // Display 4 rows per "page"
+            language: {
+                paginate: {
+                    previous: '<i class="fas fa-chevron-left"></i>', // Custom text for previous button
+                    next: '<i class="fas fa-chevron-right"></i>' // Custom text for next button
+                }
+            },
+            drawCallback: function() {
+                // Adjust table row display
+                var rows = $('#sampleTable tbody tr');
+                rows.hide(); // Hide all rows initially
+                rows.slice(0, 4).show(); // Show only the first 4 rows
+            }
+        });
+    });
+
         // Function to display Beijing time
         function displayBeijingTime() {
             // Get current date and time in Beijing timezone
@@ -283,13 +334,9 @@
             });
             document.getElementById("beijing-time").innerHTML = beijingTime;
         }
-
+    
         // Update Beijing time every second
         setInterval(displayBeijingTime, 1000);
-
-        $(document).ready(function() {
-            $('#sampleTable').DataTable();
-        });
     </script>
 
 </body>

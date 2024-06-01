@@ -28,6 +28,11 @@ Route::get('/tv', function () {
     return view('tv');
 });
 
+Route::get('/tvg', function () {
+    return view('tvg');
+});
+ 
+
 Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);
 
 
