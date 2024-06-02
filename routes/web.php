@@ -94,3 +94,4 @@ Route::get('/FetchTransactions', [StudTransController::class, 'FetchTransactions
 Route::post('/update-status/{id}', [QueuingController::class, 'updateStatus']);
 
 Route::get('/get-is-call-status/{window}', [QueuingController::class, 'getIsCallStatus']);
+Route::get('/get-archived-and-done', [StudTransController::class, 'getArchivedAndDone']);

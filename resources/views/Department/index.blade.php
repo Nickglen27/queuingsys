@@ -25,6 +25,10 @@
     <head>
 
         <style>
+            .modal-top {
+                margin-top: 10%;
+            }
+
             .navbar {
                 height: 100px;
             }
@@ -155,7 +159,7 @@
                 </div>
             </div>
         </div>
-        <table id="TransactionTable" class="table table-striped table-bordered">
+        <table id="TransactionTable" class="table table-striped table-bordered" style="width: 100%;">
             <thead>
                 <tr>
                     <th class="text-center">Priority No.</th>
@@ -174,51 +178,36 @@
 
     <!-- Modal for Archiving -->
     <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl modal-top">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: green;">
                     <h5 class="modal-title" id="archiveModalLabel" style="font-weight: bold; color: white;">Archive Data
                     </h5>
-
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    {{-- <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 5%;">#</th>
+                                <th style="width: 5%;">Priority No.</th>
                                 <th style="width: 30%;">Name</th>
                                 <th style="width: 30%;">Transaction</th>
-                                <th style="width: 25%;">Department</th>
-
+                                <th style="width: 30%;">Status</th>
+                                <th style="width: 25%;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Chiwan Florante Valmores</td>
-                                <td>Tuition</td>
-                                <td>Cashier</td>
-                                <td>69</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jhonel Anor Benedicto</td>
-                                <td>Enroll</td>
-                                <td>Admin</td>
-                                <td>169</td>
-                            </tr>
-                        </tbody>
-                    </table> --}}
+                        <tbody></tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Archive</button>
+                    {{-- <button type="button" class="btn btn-primary">Archive</button> --}}
                 </div>
             </div>
         </div>
     </div>
+
     <!-- End of Modal -->
 
     <!-- Bootstrap Bundle with Popper -->
@@ -293,14 +282,15 @@
                             "title": "Actions",
                             "render": function(data, type, row) {
                                 return '<div class="text-center">' +
-                                    '<button class="btn btn-primary mr-2" style="width: 100px;" onclick="handleStatus(' +
+                                    '<button class="btn btn-primary mr-2" style="width: 80px; height: 30px;" onclick="handleStatus(' +
                                     row.id + ')"><i class="fa fa-phone"></i></button>' +
-                                    '<button class="btn btn-success mr-2" style="width: 100px;" onclick="isdone(' +
+                                    '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="isdone(' +
                                     row.id + ')"><i class="fa fa-check"></i></button>' +
-                                    '<button class="btn btn-danger mr-2" style="width: 100px;" onclick="handleArchive(' +
+                                    '<button class="btn btn-danger mr-2" style="width: 80px; height: 30px;" onclick="handleArchiveButtonClick(' +
                                     row.id + ')"><i class="fa fa-archive"></i></button>' +
                                     '</div>';
                             }
+
                         }
                     ]
                 });
@@ -376,6 +366,32 @@
             });
         }
 
+
+        function handleArchiveButtonClick(id) {
+            // Perform AJAX request to update the status
+            $.ajax({
+                url: '/update-status/' + id,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    is_archive: 1 // Set is_archive to 1 for marking as archived
+                },
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                    // Remove the row from DataTable
+                    removeRowFromDataTable(id);
+                    // Optionally, provide feedback to the user
+                },
+                error: function(xhr) {
+                    // Handle error response, if needed
+                    console.error(xhr.responseText);
+                    // Optionally, provide feedback to the user
+                    alert('Error marking task as archived. Please try again.');
+                }
+            });
+        }
+
         // Function to remove the row from DataTable
         function removeRowFromDataTable(id) {
             // Get DataTable instance
@@ -387,6 +403,78 @@
             // Remove the row from DataTable
             dataTable.row(rowIndex).remove().draw();
         }
+        $(document).ready(function() {
+            $('#archiveModal').on('show.bs.modal', function() {
+                fetchArchivedAndDone();
+            });
+        });
+
+        function fetchArchivedAndDone() {
+            $.ajax({
+                url: '/get-archived-and-done',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // Clear the existing table body
+                    $('#archiveModal tbody').empty();
+
+                    // Check if the response indicates success and if there are any transactions returned
+                    if (response.success && response.data.length > 0) {
+                        // Populate the modal body with the data
+                        $.each(response.data, function(index, transaction) {
+                            var studentFirstname = (transaction.student && transaction.student
+                                .Firstname) ? transaction.student.Firstname : 'Unknown';
+                            var transactionType = (transaction.transaction && transaction.transaction
+                                    .transaction_type) ? transaction.transaction.transaction_type :
+                                'Unknown';
+                            var isDoneBadge = (transaction.is_done == 1) ?
+                                '<span class="badge bg-success">Done</span>' :
+                                '<span class="badge bg-warning">Pending</span>';
+                            var isDoneButtonDisabled = (transaction.is_done == 1) ? 'disabled' :
+                                ''; // Disable the button if the transaction is done
+                            var row = '<tr>' +
+                                '<td>' + transaction.priority_num + '</td>' +
+                                '<td>' + studentFirstname + '</td>' +
+                                '<td>' + transactionType + '</td>' +
+                                '<td>' + isDoneBadge + '</td>' +
+                                '<td class="text-center">' +
+                                '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="handleUnArchiveButtonClick(' +
+                                transaction.id + ')" ' + isDoneButtonDisabled +
+                                '><i class="fa fa-undo"></i></button>' +
+                                '</td>' +
+                                '</tr>';
+                            $('#archiveModal tbody').append(row);
+                        });
+
+                        // Initialize Datatable
+                        $('#archiveModal table').DataTable({
+                            destroy: true, // Destroy existing datatable before reinitializing
+                            paging: false // Remove pagination
+                        });
+
+                        // Show the modal
+                        $('#archiveModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                    } else {
+                        // Handle the case where no archived and done records are found
+                        console.log('No archived and done records found.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error fetching archived and done records:', error);
+                }
+            });
+        }
+
+
+        // Triggered when the modal is about to be shown
+        $('#archiveModal').on('show.bs.modal', function(event) {
+            // Fetch archived and done records
+            fetchArchivedAndDone();
+        });
     </script>
 
 </body>

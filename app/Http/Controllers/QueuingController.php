@@ -25,36 +25,44 @@ class QueuingController extends Controller
 
         return response()->json($queuingRecords);
     }
-
-  public function updateStatus($studTransId)
-{
-    // Find the Queuing record with the given studTrans_id
-    $queuing = Queuing::where('studtrans_id', $studTransId)->first();
-
-    // If the Queuing record exists
-    if ($queuing) {
-        // Check if is_call is already 1 and the is_done field is not provided
-        if ($queuing->is_call == 1 && !request()->has('is_done')) {
-            // Update is_done to 1
-            $queuing->is_done = 1;
-        } else {
-            // Update is_call attribute to 1
-            $queuing->is_call = 1;
-
-            // Update is_done attribute only if provided
-            if (request()->has('is_done')) {
-                $queuing->is_done = request()->input('is_done');
+    public function updateStatus($studTransId)
+    {
+        // Find the Queuing record with the given studTrans_id
+        $queuing = Queuing::where('studtrans_id', $studTransId)->first();
+    
+        // If the Queuing record exists
+        if ($queuing) {
+            // Check if is_call is already 1 and the is_done field is not provided
+            if ($queuing->is_call == 1 && !request()->has('is_done') && !request()->has('is_archive')) {
+                // Update is_done to 1
+                $queuing->is_done = 1;
+            } else {
+                // Update is_call attribute to 1 if is_archive is not provided
+                if (!request()->has('is_archive')) {
+                    $queuing->is_call = 1;
+                }
+    
+                // Update is_done attribute only if provided
+                if (request()->has('is_done')) {
+                    $queuing->is_done = request()->input('is_done');
+                }
+    
+                // Update is_archive attribute only if provided
+                if (request()->has('is_archive')) {
+                    $queuing->is_archive = request()->input('is_archive');
+                }
             }
+    
+            $queuing->save();
+    
+            return response()->json(['message' => 'Status updated successfully']);
+        } else {
+            // Handle the case where no Queuing record is found for the given studTrans_id
+            return response()->json(['error' => 'No Queuing record found for the given studTrans_id'], 404);
         }
-
-        $queuing->save();
-
-        return response()->json(['message' => 'Status updated successfully']);
-    } else {
-        // Handle the case where no Queuing record is found for the given studTrans_id
-        return response()->json(['error' => 'No Queuing record found for the given studTrans_id'], 404);
     }
-}
+    
+
 
 
 public function getIsCallStatus($windows)
@@ -64,10 +72,11 @@ public function getIsCallStatus($windows)
         $windows = [$windows];
     }
 
-    // Initialize arrays to store unique department names, corresponding priority_nums, and studtrans_ids
+    // Initialize arrays to store unique department names, corresponding priority_nums, student details, and transaction types
     $uniqueDepartments = [];
     $priorityNums = [];
-    $studtransIds = [];
+    $studentDetails = [];
+    $transactionTypes = [];
 
     // Iterate through each window
     foreach ($windows as $window) {
@@ -87,24 +96,66 @@ public function getIsCallStatus($windows)
             if (!in_array($department->name, $uniqueDepartments)) {
                 // Store the unique department name
                 $uniqueDepartments[] = $department->name;
-                // Initialize an array to store priority_nums for each department name
+                // Initialize arrays to store priority_nums, student details, and transaction types for each department name
                 $priorityNums[$department->name] = [];
-                // Initialize an array to store studtrans_ids for each department name
-                $studtransIds[$department->name] = [];
+                $studentDetails[$department->name] = [];
+                $transactionTypes[$department->name] = [];
             }
+
             // Store the priority_num and studtrans_id for the current department name
             $priorityNums[$department->name][] = $queuing->priority_num;
-            $studtransIds[$department->name][] = $queuing->studtrans_id;
+            $studtransId = $queuing->studtrans_id;
+            
+            // Fetch the corresponding studtrans record to get the student_id and transaction_id
+            $studtrans = Studtrans::find($studtransId);
+            if ($studtrans) {
+                // Fetch the student details using the student_id
+                $student = $studtrans->student()->first();
+                if ($student) {
+                    // Store the student details (e.g., Firstname) for the current department name
+                    $studentDetails[$department->name][] = $student->Firstname;
+                    // Fetch the transaction record to get the transaction_type
+                    $transaction = $studtrans->transaction()->first();
+                    if ($transaction) {
+                        // Store the transaction_type for the current department name
+                        $transactionTypes[$department->name][] = $transaction->transaction_type;
+                    } else {
+                        // If transaction record not found, add a placeholder or handle accordingly
+                        $transactionTypes[$department->name][] = null;
+                    }
+                } else {
+                    // If student record not found, add a placeholder or handle accordingly
+                    $studentDetails[$department->name][] = null;
+                    // If student record not found, add a placeholder or handle accordingly
+                    $transactionTypes[$department->name][] = null;
+                }
+            } else {
+                // If studtrans record not found, add a placeholder or handle accordingly
+                $studentDetails[$department->name][] = null;
+                // If studtrans record not found, add a placeholder or handle accordingly
+                $transactionTypes[$department->name][] = null;
+            }
         }
     }
 
-    // Return the unique department names along with corresponding priority_nums and studtrans_ids
+    // Return the unique department names along with corresponding priority_nums, student details, and transaction types
     return response()->json([
         'windows' => $windows,
-        'departments' => $uniqueDepartments, // Change 'department_ids' to 'departments'
-        'priority_nums' => $priorityNums, // Add priority_nums to the response
-        'studtrans_ids' => $studtransIds // Add studtrans_ids to the response
+        'departments' => $uniqueDepartments,
+        'priority_nums' => $priorityNums,
+        'student_details' => $studentDetails,
+        'transaction_types' => $transactionTypes // Change 'transaction_ids' to 'transaction_types'
     ]);
 }
+
+
+
+
+
+
+
+
+
+
 
 }

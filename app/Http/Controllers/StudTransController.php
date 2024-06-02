@@ -161,5 +161,51 @@ class StudTransController extends Controller
         }
     }
     
+    public function getArchivedAndDone(Request $request)
+    {
+        try {
+            // Get the logged-in user
+            $user = Auth::user();
     
+            // Find all Queuing records belonging to the user's department and window
+            $queuedTransactions = Queuing::where(function ($query) use ($user) {
+                $query->where('department_id', $user->department_id)
+                    ->where('windows', $user->window);
+            })
+            ->whereHas('studTrans', function ($query) {
+                $query->where('is_archive', 1)
+                      ->orWhere('is_done', 1); // Add condition to check if the transaction is archived or done
+            })
+            ->with('studTrans') // Load the relationship to access is_done
+            ->orderBy('priority_num')
+            ->get();
+    
+            // Initialize an array to store the transaction data
+            $transactions = [];
+    
+            // Iterate over each queued transaction
+            foreach ($queuedTransactions as $queuedTransaction) {
+                // Find the associated StudTrans record with its related models
+                $studTrans = $queuedTransaction->studTrans;
+    
+                // Add the priority_num and is_done to the transaction data
+                $transactionData = $studTrans->toArray();
+                $transactionData['priority_num'] = $queuedTransaction->priority_num;
+                $transactionData['is_done'] = $queuedTransaction->is_done; // Add is_done value
+                $transactions[] = $transactionData;
+            }
+    
+            // Return the transactions data as a JSON response
+            return response()->json([
+                'success' => true,
+                'data' => $transactions
+            ]);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error fetching transactions: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json(['success' => false, 'message' => 'Internal server error.']);
+        }
+    }
+    
+
 }
