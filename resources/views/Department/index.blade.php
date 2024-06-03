@@ -25,8 +25,8 @@
     <head>
 
         <style>
-            .modal-top {
-                margin-top: 10%;
+            .background-light {
+                background: #0a2342;
             }
 
             .navbar {
@@ -50,78 +50,120 @@
             .navbar-brand {
                 font-family: 'Oregon', sans-serif;
                 animation: bounce 2s infinite;
-                font-size: 28px;
+                font-size: 40px;
                 font-weight: bold;
                 color: rgb(255, 253, 253);
-                /* Added this line to change text color */
             }
 
             .custom-button {
                 float: right;
-                margin-top: 10px;
+                margin-top: 5px;
             }
 
             .timezone {
-                font-size: 18px;
+                font-size: 40px;
+                font-family: 'poppins', sans-serif;
                 color: rgb(255, 255, 255);
                 margin-right: 20px;
-                margin-top: 15px;
-            }
-
-            .archive-icon {
-                font-size: 24px;
-                color: #5e0b0e;
                 margin-top: 10px;
+            }
+
+            .white-box {
+                background-color: white;
+                height: 650px;
+                border: 4px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: 0px;
+            }
+
+            .left-box {
+                width: 100%;
+                /* Adjusted to fit the content better */
+            }
+
+            .right-box {
+                width: 150%;
+                /* Adjusted to fit the content better */
+            }
+
+            .table th,
+            .table td {
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .header-title {
+                text-align: center;
+                font-size: 48px;
+                font-weight: bold;
                 margin-bottom: 10px;
+                padding: 15px;
+                background-color: yellow;
+                border-radius: 5px;
+                color: #000000;
             }
 
-            .archive-container {
-                text-align: left;
-                margin-bottom: 20px;
-            }
-
-            /* Center text in table */
-            #dataTable th,
-            #dataTable td {
+            .header-right {
+                background-color: yellow;
+                padding: 10px;
                 text-align: center;
             }
 
-            /* Adjust width of table headers */
-            #dataTable th {
-                width: 20%;
-                /* Adjust width as needed */
-            }
-
-            .green-header {
-                background-color: green;
-            }
-
-
-
-            .btn-group {
-                display: flex;
-                gap: 5px;
-                /* Adjust the gap between buttons as needed */
-            }
-
-            .btn-yellow {
-                background-color: yellow;
-                border-color: yellow;
+            .header-right h2 {
+                margin: 0;
                 color: black;
+                font-size: 28px;
             }
 
-            .btn-blue {
-                background-color: blue;
-                border-color: blue;
+            .container {
+                max-width: 95%;
+                /* Adjust container max width to fit content better */
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                font-family: Arial, sans-serif;
+                /* Change the font-family as needed */
+                font-size: 24px;
+                /* Change the font-size as needed */
+                font-weight: bold;
+                /* You can change it to normal if you prefer */
+                text-align: left;
+                padding: 8px;
+                border-bottom: 6px solid #ddd;
+            }
+
+            td {
+                font-family: 'poppins', sans-serif;
+                font-size: 20px;
+                padding: 8px;
+                border-bottom: 3px solid #ddd;
+
+
+            }
+
+            .tdnext {
+                color: red;
+                font-weight: bold;
+                font-size: 25px;
+
+            }
+
+            .tdserve {
+                color: red;
+                font-weight: bold;
+                font-size: 23px;
+
+            }
+
+            .green-highlight {
+                background-color: green;
                 color: white;
-            }
-
-
-
-            .action-buttons {
-                display: flex;
-                gap: 5px;
-                /* Adjust the gap between buttons as needed */
             }
         </style>
     </head>
@@ -392,6 +434,34 @@
             });
         }
 
+        function handleUnArchiveButtonClick(id, is_archive) {
+            // Get CSRF token value
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Send an AJAX request to update the 'is_archive' value
+            $.ajax({
+                url: '/update-status/' + id, // Update the URL to match your backend endpoint
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
+                },
+                data: {
+                    is_archive: 0 // Set 'is_archive' value to 0
+                },
+                success: function(response) {
+                    // Remove the row from the DataTable
+                    $('#archiveModal table').DataTable().rows(function(idx, data, node) {
+                        return data.id == id;
+                    }).remove().draw();
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error updating is_archive value:', error);
+                }
+            });
+        }
+
+
         // Function to remove the row from DataTable
         function removeRowFromDataTable(id) {
             // Get DataTable instance
@@ -415,48 +485,10 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    // Clear the existing table body
-                    $('#archiveModal tbody').empty();
-
                     // Check if the response indicates success and if there are any transactions returned
                     if (response.success && response.data.length > 0) {
-                        // Populate the modal body with the data
-                        $.each(response.data, function(index, transaction) {
-                            var studentFirstname = (transaction.student && transaction.student
-                                .Firstname) ? transaction.student.Firstname : 'Unknown';
-                            var transactionType = (transaction.transaction && transaction.transaction
-                                    .transaction_type) ? transaction.transaction.transaction_type :
-                                'Unknown';
-                            var isDoneBadge = (transaction.is_done == 1) ?
-                                '<span class="badge bg-success">Done</span>' :
-                                '<span class="badge bg-warning">Pending</span>';
-                            var isDoneButtonDisabled = (transaction.is_done == 1) ? 'disabled' :
-                                ''; // Disable the button if the transaction is done
-                            var row = '<tr>' +
-                                '<td>' + transaction.priority_num + '</td>' +
-                                '<td>' + studentFirstname + '</td>' +
-                                '<td>' + transactionType + '</td>' +
-                                '<td>' + isDoneBadge + '</td>' +
-                                '<td class="text-center">' +
-                                '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="handleUnArchiveButtonClick(' +
-                                transaction.id + ')" ' + isDoneButtonDisabled +
-                                '><i class="fa fa-undo"></i></button>' +
-                                '</td>' +
-                                '</tr>';
-                            $('#archiveModal tbody').append(row);
-                        });
-
-                        // Initialize Datatable
-                        $('#archiveModal table').DataTable({
-                            destroy: true, // Destroy existing datatable before reinitializing
-                            paging: false // Remove pagination
-                        });
-
-                        // Show the modal
-                        $('#archiveModal').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                        });
+                        // Initialize Datatable with column definitions and data
+                        initializeDataTable(response.data);
                     } else {
                         // Handle the case where no archived and done records are found
                         console.log('No archived and done records found.');
@@ -468,6 +500,62 @@
                 }
             });
         }
+
+        function initializeDataTable(data) {
+            // Define DataTable columns
+            var columns = [{
+                    data: 'priority_num',
+                    title: 'Priority Number'
+                },
+                {
+                    data: 'student.Firstname',
+                    title: 'Student Firstname'
+                },
+                {
+                    data: 'transaction.transaction_type',
+                    title: 'Transaction Type'
+                },
+                {
+                    data: 'is_done',
+                    title: 'Status',
+                    render: function(data, type, row) {
+                        return (data == 1) ? '<span class="badge bg-success">Done</span>' :
+                            '<span class="badge bg-warning">Pending</span>';
+                    }
+                },
+                {
+                    data: null,
+                    title: 'Action',
+                    render: function(data, type, row) {
+                        var isDoneButtonDisabled = (data.is_done == 1) ? 'disabled' : '';
+                        return '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="handleUnArchiveButtonClick(' +
+                            data.id + ',' + data.is_archive + ')" ' + isDoneButtonDisabled +
+                            '><i class="fa fa-undo"></i></button>';
+                    }
+
+                }
+            ];
+
+            // Initialize DataTable
+            $('#archiveModal table').DataTable({
+                destroy: true, // Destroy existing datatable before reinitializing
+                paging: false, // Remove pagination
+                data: data,
+                columns: columns,
+                order: [
+                    [0, 'desc'] // Sort by the first column (Priority Number) in descending order
+                ]
+            });
+
+            // Show the modal
+            $('#archiveModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
+
+        // Call fetchArchivedAndDone to load data on page load or any other event
+        fetchArchivedAndDone();
 
 
         // Triggered when the modal is about to be shown

@@ -21,7 +21,6 @@
     <!-- Google Fonts - Poppins -->
     <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'
         rel='stylesheet'>
-
     {{-- <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
@@ -38,6 +37,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"> --}}
 
     <style>
+        .green-highlight {
+            background-color: black;
+            /* Green background color */
+        }
+
         .background-light {
             background: #0a2342;
         }
@@ -180,40 +184,24 @@
                     <div class="header-title">QUEUING SERVING</div>
                     <div class="table-responsive-xl">
                         <!-- Added xl responsive class here -->
-                        <table id="WindowTable" class="table table-striped">
-                            <thead>
+                        <table id="WindowTable" class="table" style="width:100%">
+                            <thead style="background-color: green; color: white;">
                                 <tr>
                                     <th style="width: 5%;">Window</th>
                                     <th style="width: 25%;">Name</th>
                                     <th style="width: 15%;">Department</th>
                                     <th style="width: 25%;">Transaction</th>
-                                    <th style="width: 25%;">Prio Number</th>
+                                    <th style="width: 20%;">Prio Number</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- <!-- Sample data rows can be added here -->
-
-                                <tr>
-                                    <td>1</td>
-                                    <td>Mark Magsayo</td>
-                                    <td>Cashier</td>
-                                    <td>Tuition</td>
-                                    <td>12</td>
-                                </tr>
-
-                                <tr>
-                                    <td>4</td>
-                                    <td>Mark Magsayo</td>
-                                    <td>Cashier</td>
-                                    <td>Tuition</td>
-                                    <td>42</td>
-                                </tr> --}}
 
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <!-- Adjusted column width to match layout -->
                 <div class="white-box right-box">
@@ -222,8 +210,8 @@
                     </div>
                     <div class="table-responsive-xl">
                         <!-- Added xl responsive class here -->
-                        <table id="nextQueuingTable" class="table table-striped">
-                            <thead>
+                        <table id="nextQueuingTable" class="table" style="width:100%">
+                            <thead style="background-color: green; color: white;">
                                 <tr>
                                     <th style="width: 1%;"></th> <!-- Adjust width as needed -->
                                     <th style="width: 50%;"><b>Name</b></th> <!-- Adjust width as needed -->
@@ -232,24 +220,29 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
+                                    <td>1.</td>
                                     <td>John Doe</td>
-                                    <td>25</td>
+                                    <td class="tdnext">25</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>2.</td>
                                     <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td class="tdnext">18</td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
-                                    <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td>3.</td>
+                                    <td>Mark Magsayo</td>
+                                    <td class="tdnext">30</td>
                                 </tr>
                                 <tr>
-                                    <td>4</td>
-                                    <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td>4.</td>
+                                    <td>Lucy Brown</td>
+                                    <td class="tdnext">22</td>
+                                </tr>
+                                <tr>
+                                    <td>5.</td>
+                                    <td>Sam Wilson</td>
+                                    <td class="tdnext">15</td>
                                 </tr>
                                 <!-- Add more rows as needed -->
                             </tbody>
@@ -260,101 +253,6 @@
             </div>
         </div>
     </div>
-
-    {{-- <body class="background-light">
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <h1>Queuing</h1>
-            </a>
-            <strong>
-                <div class="timezone"><span id="beijing-time"></span></div>
-            </strong>
-        </div>
-    </nav> --}}
-
-    {{-- <div class="white-box">
-        <div class="container mt-4"> --}}
-    <!-- First row of cards -->
-    {{-- <div class="row justify-content-center"> --}}
-
-    <!-- Card 1 -->
-    {{-- <div class="col-lg-3 col-md-6 mb-4" id="window_card_1">
-                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
-                        <div class="card-body text-center">
-                            <!-- Icon and Title -->
-                            <h1 class="card-title" id="window_title_1" value=""><b>Loading...</b></h1>
-                            <!-- Centered title with loading text -->
-                            <!-- Display department_id and priority_num -->
-                            <div id="department_and_priority_1"></div>
-                            <!-- Sample data -->
-                            <hr class="custom-hr">
-                            <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" id="priority_num_1" class="number-input" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4" id="window_card_2">
-                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
-                        <div class="card-body text-center">
-                            <!-- Icon and Title -->
-                            <h1 class="card-title" id="window_title_2"><b>Loading...</b></h1>
-                            <!-- Centered title with loading text -->
-                            <!-- Display department_id and priority_num -->
-                            <div id="department_and_priority_2"></div>
-                            <!-- Sample data -->
-                            <hr class="custom-hr">
-                            <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" id="priority_num_2" class="number-input" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Repeat the above structure for windows 3 and 4 with appropriate IDs -->
-                <div class="col-lg-3 col-md-6 mb-4" id="window_card_3">
-                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
-                        <div class="card-body text-center">
-                            <h1 class="card-title" id="window_title_3"><b>Loading...</b></h1>
-                            <div id="department_and_priority_3"></div>
-                            <hr class="custom-hr">
-                            <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" id="priority_num_3" class="number-input" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 mb-4" id="window_card_4">
-                    <div class="card text-dark bg-info mb-7" style="max-width: 20rem;">
-                        <div class="card-body text-center">
-                            <h1 class="card-title" id="window_title_4"><b>Loading...</b></h1>
-                            <div id="department_and_priority_4"></div>
-                            <hr class="custom-hr">
-                            <h5 class="card-text"><b>Priority Number:</b></h5>
-                            <input type="text" id="priority_num_4" class="number-input" value="" readonly>
-                        </div>
-                    </div>
-                </div> --}}
-
-    <!-- DataTable -->
-    {{-- <table id="WindowTable" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Department</th>
-
-                            <th>Priority Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table> --}}
-
-    {{-- 
-    </div>
-    </div> --}}
-
     <!-- Bootstrap Bundle with Popper -->
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <!-- DataTables JavaScript -->
@@ -418,6 +316,7 @@
                         if (requestsCompleted === 4) {
                             // After all requests are completed
                             initializeDataTable(tableData);
+                            highlightNewRows();
                         }
                     },
                     error: function(xhr, status, error) {
@@ -427,6 +326,7 @@
                         if (requestsCompleted === 4) {
                             // Ensure DataTable initialization if any request fails
                             initializeDataTable(tableData);
+                            highlightNewRows();
                         }
                     }
                 });
@@ -453,7 +353,11 @@
                         data: 'transaction_id' // Add column for transaction_id
                     },
                     {
-                        data: 'priority'
+                        data: 'priority',
+                        render: function(data) {
+                            // Apply custom styling to the cell content
+                            return '<strong style="color: red; font-size: 30px;">' + data + '</strong>';
+                        }
                     }
                 ],
                 dom: 't', // This removes the search and entries options
@@ -472,6 +376,40 @@
                 }
             });
         }
+
+        function highlightRows() {
+            // Highlight the first row
+            const firstRow = document.querySelector("#WindowTable tbody tr:first-child");
+            firstRow.classList.add("green-highlight");
+            setTimeout(() => {
+                firstRow.classList.remove("green-highlight");
+            }, 5000);
+
+            // Highlight the last 4 rows
+            const table = $('#WindowTable').DataTable();
+            const rows = table.rows().nodes();
+            const newRows = rows.slice(-4);
+
+            newRows.forEach(function(row) {
+                $(row).addClass('green-highlight');
+                setTimeout(function() {
+                    $(row).removeClass('green-highlight');
+                }, 5000);
+            });
+        }
+
+        window.onload = function() {
+            highlightRows();
+        }
+
+        // Call highlightRows after fetching new data
+        function fetchAndPopulateTable() {
+            // Your code to fetch and populate table data
+
+            // After fetching new data, call highlightRows
+            highlightRows();
+        }
+
 
         $(document).ready(function() {
             fetchAndPopulateTable();

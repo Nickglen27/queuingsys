@@ -32,8 +32,13 @@ class QueuingController extends Controller
     
         // If the Queuing record exists
         if ($queuing) {
+            // Update is_archive attribute only if provided
+            if (request()->has('is_archive')) {
+                $queuing->is_archive = request()->input('is_archive');
+            }
+    
             // Check if is_call is already 1 and the is_done field is not provided
-            if ($queuing->is_call == 1 && !request()->has('is_done') && !request()->has('is_archive')) {
+            if ($queuing->is_call == 1 && !request()->has('is_done')) {
                 // Update is_done to 1
                 $queuing->is_done = 1;
             } else {
@@ -46,11 +51,6 @@ class QueuingController extends Controller
                 if (request()->has('is_done')) {
                     $queuing->is_done = request()->input('is_done');
                 }
-    
-                // Update is_archive attribute only if provided
-                if (request()->has('is_archive')) {
-                    $queuing->is_archive = request()->input('is_archive');
-                }
             }
     
             $queuing->save();
@@ -61,6 +61,7 @@ class QueuingController extends Controller
             return response()->json(['error' => 'No Queuing record found for the given studTrans_id'], 404);
         }
     }
+    
     
 
 

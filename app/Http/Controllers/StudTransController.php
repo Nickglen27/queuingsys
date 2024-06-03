@@ -126,13 +126,15 @@ class StudTransController extends Controller
             // Find all Queuing records belonging to the user's department and window
             $queuedTransactions = Queuing::where(function ($query) use ($user) {
                 $query->where('department_id', $user->department_id)
-                    ->where('windows', $user->window);
+                      ->where('windows', $user->window);
             })
             ->whereHas('studTrans', function ($query) {
-                $query->where('is_done', '!=', 1);
+                $query->where('is_done', '!=', 1)
+                      ->where('is_archive', '!=', 1);
             })
             ->orderBy('priority_num')
             ->get();
+        
     
             // Initialize an array to store the transaction data
             $transactions = [];
@@ -170,13 +172,13 @@ class StudTransController extends Controller
             // Find all Queuing records belonging to the user's department and window
             $queuedTransactions = Queuing::where(function ($query) use ($user) {
                 $query->where('department_id', $user->department_id)
-                    ->where('windows', $user->window);
+                      ->where('windows', $user->window);
             })
             ->whereHas('studTrans', function ($query) {
                 $query->where('is_archive', 1)
                       ->orWhere('is_done', 1); // Add condition to check if the transaction is archived or done
             })
-            ->with('studTrans') // Load the relationship to access is_done
+            ->with('studTrans.student', 'studTrans.transaction') // Load the relationships
             ->orderBy('priority_num')
             ->get();
     
@@ -191,7 +193,7 @@ class StudTransController extends Controller
                 // Add the priority_num and is_done to the transaction data
                 $transactionData = $studTrans->toArray();
                 $transactionData['priority_num'] = $queuedTransaction->priority_num;
-                $transactionData['is_done'] = $queuedTransaction->is_done; // Add is_done value
+                $transactionData['is_done'] = $queuedTransaction->is_done; // Get is_done value from Queuing
                 $transactions[] = $transactionData;
             }
     
@@ -206,6 +208,7 @@ class StudTransController extends Controller
             return response()->json(['success' => false, 'message' => 'Internal server error.']);
         }
     }
+    
     
 
 }
