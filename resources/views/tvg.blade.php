@@ -82,7 +82,7 @@
         }
 
         .right-box {
-            width: 145%;
+            width: 150%;
             /* Adjusted to fit the content better */
         }
 
@@ -96,7 +96,7 @@
             text-align: center;
             font-size: 48px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             padding: 15px;
             background-color: yellow;
             border-radius: 5px;
@@ -134,14 +134,35 @@
             /* You can change it to normal if you prefer */
             text-align: left;
             padding: 8px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 6px solid #ddd;
         }
 
         td {
-            font-family: Arial, sans-serif;
+            font-family: 'poppins', sans-serif;
             font-size: 20px;
             padding: 8px;
             border-bottom: 3px solid #ddd;
+
+
+        }
+
+        .tdnext {
+            color: red;
+            font-weight: bold;
+            font-size: 25px;
+
+        }
+
+        .tdserve {
+            color: red;
+            font-weight: bold;
+            font-size: 23px;
+
+        }
+
+        .green-highlight {
+            background-color: green;
+            color: white;
         }
     </style>
 </head>
@@ -166,33 +187,52 @@
                     <div class="header-title">QUEUING SERVING</div>
                     <div class="table-responsive-xl">
                         <!-- Added xl responsive class here -->
-                        <table id="dataTable" class="table table-striped">
-                            <thead>
+                        <table id="dataTable" class="table" style="width:100%">
+                            <thead style="background-color: green; color: white;">
                                 <tr>
                                     <th style="width: 5%;">Window</th>
                                     <th style="width: 25%;">Name</th>
                                     <th style="width: 15%;">Department</th>
                                     <th style="width: 25%;">Transaction</th>
-                                    <th style="width: 25%;">Prio Number</th>
+                                    <th style="width: 20%;">Prio Number</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Sample data rows can be added here -->
-
+                                <!-- Sample data rows -->
+                                <tr>
+                                    <td>2</td>
+                                    <td>Chiwan Quimson</td>
+                                    <td>Registrar</td>
+                                    <td>Enroll</td>
+                                    <td class="tdserve">12</td>
+                                </tr>
                                 <tr>
                                     <td>1</td>
                                     <td>Mark Magsayo</td>
                                     <td>Cashier</td>
                                     <td>Tuition</td>
-                                    <td>12</td>
+                                    <td class="tdserve">36</td>
                                 </tr>
-
+                                <tr>
+                                    <td>3</td>
+                                    <td>John Doe</td>
+                                    <td>Finance</td>
+                                    <td>Payment</td>
+                                    <td class="tdserve">27</td>
+                                </tr>
                                 <tr>
                                     <td>4</td>
-                                    <td>Mark Magsayo</td>
-                                    <td>Cashier</td>
-                                    <td>Tuition</td>
-                                    <td>42</td>
+                                    <td>Jane Smith</td>
+                                    <td>Support</td>
+                                    <td>Inquiry</td>
+                                    <td class="tdserve">42</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Chris Evans</td>
+                                    <td>Admin</td>
+                                    <td>Approval</td>
+                                    <td class="tdserve">19</td>
                                 </tr>
 
                             </tbody>
@@ -200,6 +240,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <!-- Adjusted column width to match layout -->
                 <div class="white-box right-box">
@@ -208,8 +249,8 @@
                     </div>
                     <div class="table-responsive-xl">
                         <!-- Added xl responsive class here -->
-                        <table id="nextQueuingTable" class="table table-striped">
-                            <thead>
+                        <table id="nextQueuingTable" class="table" style="width:100%">
+                            <thead style="background-color: green; color: white;">
                                 <tr>
                                     <th style="width: 1%;"></th> <!-- Adjust width as needed -->
                                     <th style="width: 50%;"><b>Name</b></th> <!-- Adjust width as needed -->
@@ -218,24 +259,29 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
+                                    <td>1.</td>
                                     <td>John Doe</td>
-                                    <td>25</td>
+                                    <td class="tdnext">25</td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
+                                    <td>2.</td>
                                     <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td class="tdnext">18</td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
-                                    <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td>3.</td>
+                                    <td>Mark Magsayo</td>
+                                    <td class="tdnext">30</td>
                                 </tr>
                                 <tr>
-                                    <td>4</td>
-                                    <td>Jane Smith</td>
-                                    <td>18</td>
+                                    <td>4.</td>
+                                    <td>Lucy Brown</td>
+                                    <td class="tdnext">22</td>
+                                </tr>
+                                <tr>
+                                    <td>5.</td>
+                                    <td>Sam Wilson</td>
+                                    <td class="tdnext">15</td>
                                 </tr>
                                 <!-- Add more rows as needed -->
                             </tbody>
@@ -262,9 +308,7 @@
                 "ordering": false // Disable sorting
             });
         });
-
-        
-
+    
         // Function to display Beijing time
         function displayBeijingTime() {
             // Get current date and time in Beijing timezone
@@ -273,10 +317,22 @@
             });
             document.getElementById("beijing-time").innerHTML = beijingTime;
         }
-
+    
         // Update Beijing time every second
         setInterval(displayBeijingTime, 1000);
+
+        window.onload = function() {
+            const rows = document.querySelectorAll("#dataTable tbody tr");
+            const lastRow = rows[rows.length - 1]; // Select the last row
+
+            lastRow.classList.add("green-highlight"); // Turn the last row green
+
+            setTimeout(() => {
+                lastRow.classList.remove("green-highlight"); // Remove the highlight after 5 seconds
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
     </script>
+
 </body>
 
 </html>
