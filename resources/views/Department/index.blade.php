@@ -25,6 +25,12 @@
     <head>
 
         <style>
+            .highlight-row {
+                background-color: #A7E6FF !important;
+                color: white;
+            }
+
+
             .background-light {
                 background: #0a2342;
             }
@@ -336,13 +342,21 @@
                         }
                     ]
                 });
+                // Highlight rows where is_call is equal to 1
+                $('#TransactionTable tbody tr').each(function() {
+                    var rowData = $('#TransactionTable').DataTable().row(this).data();
+                    if (rowData && rowData.is_call === 1) {
+                        $(this).addClass('highlight-row');
+                    }
+                });
             }
+
 
             // Call fetchTransactions initially when the page loads
             fetchTransactions();
 
             // Refresh the data every 5 seconds
-            setInterval(fetchTransactions, 5000); // 5000 milliseconds = 5 seconds
+            setInterval(fetchTransactions, 2000); // 5000 milliseconds = 5 seconds
         });
 
 
@@ -364,55 +378,90 @@
         // });
         function handleStatus(id) {
             $.ajax({
-                url: '/update-status/' + id,
+                url: '/update-call/' + id,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
                     is_call: 1, // Always set is_call to 1
-
-                },
-                success: function(response) {
-                    // Handle success response, if needed
-                    console.log(response);
-                },
-                error: function(xhr) {
-                    // Handle error response, if needed
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-
-        function isdone(id) {
-            // Perform AJAX request to update the status
-            $.ajax({
-                url: '/update-status/' + id,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    is_done: 1 // Set is_done to 1 for marking as done
                 },
                 success: function(response) {
                     // Handle success response
                     console.log(response);
-                    // Remove the row from DataTable
-                    removeRowFromDataTable(id);
-                    // Optionally, provide feedback to the user
-                    alert('Task marked as done successfully!');
+
+                    // Highlight the row if is_call is 1
+                    if (response.is_call === 1) {
+                        var table = $('#TransactionTable').DataTable();
+                        var rowIndex = response.rowIndex;
+                        table.row(rowIndex).node().classList.add('blue-row');
+                    }
                 },
                 error: function(xhr) {
-                    // Handle error response, if needed
+                    // Handle error response
                     console.error(xhr.responseText);
-                    // Optionally, provide feedback to the user
-                    alert('Error marking task as done. Please try again.');
+
+                    // Show SweetAlert error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'You can only call one at a time.'
+                    });
+                }
+            });
+        }
+
+
+        function isdone(id) {
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to mark this task as done?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, mark it as done!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Perform AJAX request to update the status
+                    $.ajax({
+                        url: '/update-done/' + id,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_done: 1 // Set is_done to 1 for marking as done
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            console.log(response);
+                            // Remove the row from DataTable
+                            removeRowFromDataTable(id);
+                            // Optionally, provide feedback to the user
+                            Swal.fire(
+                                'Success!',
+                                'Task marked as done successfully.',
+                                'success'
+                            );
+                        },
+                        error: function(xhr) {
+                            // Handle error response
+                            console.error(xhr.responseText);
+                            // Show error message
+                            Swal.fire(
+                                'Error!',
+                                'You need to call it first before marking as done.',
+                                'error'
+                            );
+                        }
+                    });
                 }
             });
         }
 
 
         function handleArchiveButtonClick(id) {
-            // Perform AJAX request to update the status
+            // Perform AJAX request to update the archive
             $.ajax({
-                url: '/update-status/' + id,
+                url: '/update-archive/' + id,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -423,16 +472,30 @@
                     console.log(response);
                     // Remove the row from DataTable
                     removeRowFromDataTable(id);
-                    // Optionally, provide feedback to the user
+                    // Show Swal notification
+                    Swal.fire({
+                        title: "Success",
+                        text: "Task archived successfully!",
+                        icon: "success",
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
                 },
                 error: function(xhr) {
-                    // Handle error response, if needed
+                    // Handle error response
                     console.error(xhr.responseText);
-                    // Optionally, provide feedback to the user
-                    alert('Error marking task as archived. Please try again.');
+                    // Show SweetAlert notification
+                    Swal.fire({
+                        title: "Error",
+                        text: "You need to call it first before Archiving it",
+                        icon: "error",
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }
+
 
         function handleUnArchiveButtonClick(id, is_archive) {
             // Get CSRF token value
@@ -440,7 +503,7 @@
 
             // Send an AJAX request to update the 'is_archive' value
             $.ajax({
-                url: '/update-status/' + id, // Update the URL to match your backend endpoint
+                url: '/update-unarchive/' + id, // Update the URL to match your backend endpoint
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers

@@ -38,8 +38,9 @@
 
     <style>
         .green-highlight {
-            background-color: black;
-            /* Green background color */
+            background-color: green !important;
+            transition: background-color 0.5s ease;
+            /* Add transition for smooth color change */
         }
 
         .background-light {
@@ -213,38 +214,12 @@
                         <table id="nextQueuingTable" class="table" style="width:100%">
                             <thead style="background-color: green; color: white;">
                                 <tr>
-                                    <th style="width: 1%;"></th> <!-- Adjust width as needed -->
+                                    {{-- <th style="width: 1%;"></th> <!-- Adjust width as needed --> --}}
                                     <th style="width: 50%;"><b>Name</b></th> <!-- Adjust width as needed -->
                                     <th style="width: 49%;"><b>Prio Number</b></th> <!-- Adjust width as needed -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>John Doe</td>
-                                    <td class="tdnext">25</td>
-                                </tr>
-                                <tr>
-                                    <td>2.</td>
-                                    <td>Jane Smith</td>
-                                    <td class="tdnext">18</td>
-                                </tr>
-                                <tr>
-                                    <td>3.</td>
-                                    <td>Mark Magsayo</td>
-                                    <td class="tdnext">30</td>
-                                </tr>
-                                <tr>
-                                    <td>4.</td>
-                                    <td>Lucy Brown</td>
-                                    <td class="tdnext">22</td>
-                                </tr>
-                                <tr>
-                                    <td>5.</td>
-                                    <td>Sam Wilson</td>
-                                    <td class="tdnext">15</td>
-                                </tr>
-                                <!-- Add more rows as needed -->
                             </tbody>
                         </table>
                     </div>
@@ -316,7 +291,7 @@
                         if (requestsCompleted === 4) {
                             // After all requests are completed
                             initializeDataTable(tableData);
-                            highlightNewRows();
+                            highlightNewRows(); // Highlight the new rows
                         }
                     },
                     error: function(xhr, status, error) {
@@ -326,12 +301,13 @@
                         if (requestsCompleted === 4) {
                             // Ensure DataTable initialization if any request fails
                             initializeDataTable(tableData);
-                            highlightNewRows();
+                            highlightNewRows(); // Highlight the new rows
                         }
                     }
                 });
             }
         }
+
 
         function initializeDataTable(tableData) {
             $('#WindowTable').DataTable({
@@ -376,44 +352,50 @@
                 }
             });
         }
+        // let previousResponse = null;
 
-        function highlightRows() {
-            // Highlight the first row
-            const firstRow = document.querySelector("#WindowTable tbody tr:first-child");
-            firstRow.classList.add("green-highlight");
-            setTimeout(() => {
-                firstRow.classList.remove("green-highlight");
-            }, 5000);
+        // function highlightNewRows(response) {
+        //     const table = $('#WindowTable').DataTable();
+        //     const rows = table.rows().nodes();
 
-            // Highlight the last 4 rows
-            const table = $('#WindowTable').DataTable();
-            const rows = table.rows().nodes();
-            const newRows = rows.slice(-4);
+        //     // Check if the current response is the same as the previous one
+        //     const isSameResponse = JSON.stringify(response) === JSON.stringify(previousResponse);
 
-            newRows.forEach(function(row) {
-                $(row).addClass('green-highlight');
-                setTimeout(function() {
-                    $(row).removeClass('green-highlight');
-                }, 5000);
-            });
-        }
+        //     // Remove the green-highlight class from all rows if the response is the same as the previous one
+        //     if (isSameResponse) {
+        //         $(rows).removeClass('green-highlight');
+        //     } else {
+        //         // Otherwise, highlight the new rows
+        //         $(rows).removeClass('green-highlight'); // Remove the existing highlight
+        //         if (Array.isArray(rows)) {
+        //             const lastRows = rows.slice(-4); // Get the last 4 rows (assuming 4 new rows)
+        //             lastRows.forEach(function(row) {
+        //                 $(row).addClass('green-highlight');
+        //                 setTimeout(function() {
+        //                     $(row).removeClass('green-highlight');
+        //                 }, 5000);
+        //             });
+        //         } else {
+        //             $(rows).addClass('green-highlight');
+        //             setTimeout(function() {
+        //                 $(rows).removeClass('green-highlight');
+        //             }, 5000);
+        //         }
+        //     }
 
-        window.onload = function() {
-            highlightRows();
-        }
+        //     // Update the previous response
+        //     previousResponse = response;
+        // }
 
-        // Call highlightRows after fetching new data
-        function fetchAndPopulateTable() {
-            // Your code to fetch and populate table data
-
-            // After fetching new data, call highlightRows
-            highlightRows();
-        }
 
 
         $(document).ready(function() {
             fetchAndPopulateTable();
-            setInterval(fetchAndPopulateTable, 2000); // Refresh every 5 seconds
+            setInterval(function() {
+                fetchAndPopulateTable();
+
+                // Call the highlightFirstRow function after fetching data
+            }, 2000); // Refresh every 5 seconds
         });
     </script>
     <script>
@@ -480,6 +462,58 @@
         //     // Call the function every 5 seconds using setInterval
         //     setInterval(displayDepartmentAndPriority, 5000); // 5000 milliseconds = 5 seconds
         // });
+        function fetchAndPopulateQueuingTable() {
+            $.ajax({
+                url: '/fetch-next-que',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    const table = $('#nextQueuingTable').DataTable({
+                        destroy: true, // Destroy existing DataTable before creating a new one
+                        paging: false,
+                        searching: false,
+                        info: false,
+                        columns: [{
+                                title: 'First Name',
+                                orderable: false
+                            }, // Disable sorting
+                            {
+                                title: 'Priority Number',
+                                orderable: false
+                            } // Disable sorting
+                        ],
+                        order: [], // Remove sorting arrows
+                        data: response.map(item => [item.Firstname, item
+                            .priority_num
+                        ]) // Mapping response data to match column structure
+                    });
+                    // Highlight new rows if data is different
+                    // Assuming previousResponse is defined elsewhere in the script
+                    response.forEach(function(item, index) {
+                        if (previousResponse && JSON.stringify(previousResponse[index]) !== JSON
+                            .stringify(item)) {
+                            const row = table.row(index).node();
+                            $(row).addClass('green-highlight');
+                            setTimeout(function() {
+                                $(row).removeClass('green-highlight');
+                            }, 5000);
+                        }
+                    });
+
+                    // Update the previous response
+                    previousResponse = response;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to fetch data:', error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Fetch data and populate the table at regular intervals
+            fetchAndPopulateQueuingTable();
+            setInterval(fetchAndPopulateQueuingTable, 2000); // Refresh every 2 seconds
+        });
     </script>
 
 </body>

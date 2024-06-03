@@ -16,54 +16,111 @@ class QueuingController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function fetchIds()
+    public function fetchNextQue()
     {
-        // Fetch all Queuing records with studtrans_id and related data from StudTrans model
-        $queuingRecords = Queuing::with('studTrans.student', 'studTrans.department', 'studTrans.transaction', 'studTrans.windows')
-            ->select('studtrans_id', 'guest_id')
+        // Fetch all Queuing records with the specified conditions
+        $queuingRecords = Queuing::join('studtrans', 'queuings.studtrans_id', '=', 'studtrans.id')
+            ->join('students', 'studtrans.student_id', '=', 'students.id') // Join students table
+            ->where('queuings.is_done', 0)
+            ->where('queuings.is_call', 0)
+            ->where('queuings.is_archive', 0)
+            ->select('queuings.studtrans_id', 'studtrans.student_id', 'students.Firstname', 'queuings.guest_id', 'queuings.priority_num') // Include Firstname column
             ->get();
-
+    
         return response()->json($queuingRecords);
     }
-    public function updateStatus($studTransId)
+    
+    
+
+    public function updateIsArchive($studTransId)
     {
         // Find the Queuing record with the given studTrans_id
         $queuing = Queuing::where('studtrans_id', $studTransId)->first();
     
-        // If the Queuing record exists
-        if ($queuing) {
-            // Update is_archive attribute only if provided
-            if (request()->has('is_archive')) {
+        // If the Queuing record exists and is_archive is provided
+        if ($queuing && request()->has('is_archive')) {
+            // Check if is_call is equal to 1
+            if ($queuing->is_call == 1) {
+                // Update is_archive attribute
                 $queuing->is_archive = request()->input('is_archive');
-            }
+                $queuing->save();
     
-            // Check if is_call is already 1 and the is_done field is not provided
-            if ($queuing->is_call == 1 && !request()->has('is_done')) {
-                // Update is_done to 1
-                $queuing->is_done = 1;
+                return response()->json(['message' => 'is_archive updated successfully']);
             } else {
-                // Update is_call attribute to 1 if is_archive is not provided
-                if (!request()->has('is_archive')) {
-                    $queuing->is_call = 1;
-                }
-    
-                // Update is_done attribute only if provided
-                if (request()->has('is_done')) {
-                    $queuing->is_done = request()->input('is_done');
-                }
+                // Return an error response indicating that is_archive cannot be updated if is_call is not equal to 1
+                return response()->json(['error' => 'is_archive cannot be updated if is_call is not equal to 1'], 400);
             }
-    
-            $queuing->save();
-    
-            return response()->json(['message' => 'Status updated successfully']);
         } else {
-            // Handle the case where no Queuing record is found for the given studTrans_id
-            return response()->json(['error' => 'No Queuing record found for the given studTrans_id'], 404);
+            // Handle the case where no Queuing record is found for the given studTrans_id or is_archive not provided
+            return response()->json(['error' => 'No Queuing record found for the given studTrans_id or is_archive not provided'], 404);
         }
     }
     
     
+    public function updateIsDone($studTransId)
+    {
+        // Find the Queuing record with the given studTrans_id
+        $queuing = Queuing::where('studtrans_id', $studTransId)->first();
+    
+        // If the Queuing record exists, is_done is provided, and is_call is 1
+        if ($queuing && request()->has('is_done') && $queuing->is_call == 1) {
+            // Update is_done attribute
+            $queuing->is_done = request()->input('is_done');
+            $queuing->save();
+    
+            return response()->json(['message' => 'is_done updated successfully']);
+        } else {
+            // Handle the case where no Queuing record is found for the given studTrans_id, is_done is not provided, or is_call is not 1
+            return response()->json(['error' => 'No Queuing record found for the given studTrans_id, is_done not provided, or is_call is not 1'], 404);
+        }
+    }
+    
+    public function updateIsCall($studTransId)
+    {
+        // Find the Queuing record with the given studTrans_id
+        $queuing = Queuing::where('studtrans_id', $studTransId)->first();
+    
+     // Check if there is an existing record with the same window, department_id, and is_call = 1
+                    $existingCall = Queuing::where('windows', $queuing->windows)
+                    ->where('department_id', $queuing->department_id)
+                    ->where('is_call', 1)
+                    ->where('is_done', 0)
+                    ->where('is_archive', 0)
+                    ->exists();
 
+    
+        // If the Queuing record exists, is_archive is not provided, and is_call is not already 1
+        if ($queuing && !request()->has('is_archive') && $queuing->is_call != 1 && !$existingCall) {
+            // Update is_call attribute
+            $queuing->is_call = 1;
+            $queuing->save();
+    
+            return response()->json(['message' => 'is_call updated successfully']);
+        } else {
+            // Handle the case where no Queuing record is found for the given studTrans_id, is_archive is provided, or is_call is already 1
+            return response()->json(['error' => 'No Queuing record found for the given studTrans_id, is_archive is provided, or is_call is already 1, or there is an existing call for the same window and department'], 404);
+        }
+    }
+    
+    
+    public function updateUnarchive($studTransId)
+    {
+        // Find the Queuing record with the given studTrans_id
+        $queuing = Queuing::where('studtrans_id', $studTransId)->first();
+    
+        // If the Queuing record exists and is_archive is 1
+        if ($queuing && $queuing->is_archive == 1) {
+            // Update is_archive attribute to 0
+            $queuing->is_archive = 0;
+            $queuing->save();
+    
+            return response()->json(['message' => 'is_archive updated successfully']);
+        } else {
+            // Handle the case where no Queuing record is found for the given studTrans_id or is_archive is not 1
+            return response()->json(['error' => 'No Queuing record found for the given studTrans_id or is_archive is not 1'], 404);
+        }
+    }
+    
 
 
 public function getIsCallStatus($windows)
@@ -85,6 +142,7 @@ public function getIsCallStatus($windows)
         $queuings = Queuing::where('windows', $window)
                             ->where('is_call', true)
                             ->where('is_done', '!=', 1)
+                            ->where('is_archive', '!=', 1)
                             ->whereNotNull('studtrans_id')
                             ->get();
 

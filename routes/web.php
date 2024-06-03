@@ -91,7 +91,16 @@ Route::post('/store-details', [StudTransController::class, 'store']);
 Route::get('/api/queuing', [TvController::class, 'fetchQueuing']);
 Route::get('/FetchTransactions', [StudTransController::class, 'FetchTransactions']);
 
-Route::post('/update-status/{id}', [QueuingController::class, 'updateStatus']);
+Route::post('/update-archive/{id}', [QueuingController::class, 'updateIsArchive']);
+Route::post('/update-done/{id}', [QueuingController::class, 'updateIsDone']);
+Route::post('/update-call/{id}', [QueuingController::class, 'updateIsCall']);
+Route::post('/update-unarchive/{id}', [QueuingController::class, 'updateUnarchive']);
+
+
 
 Route::get('/get-is-call-status/{window}', [QueuingController::class, 'getIsCallStatus']);
+Route::get('/fetch-next-que', [QueuingController::class, 'fetchNextQue']);
+
+
+
 Route::get('/get-archived-and-done', [StudTransController::class, 'getArchivedAndDone']);

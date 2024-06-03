@@ -134,7 +134,7 @@ class StudTransController extends Controller
             })
             ->orderBy('priority_num')
             ->get();
-        
+    
     
             // Initialize an array to store the transaction data
             $transactions = [];
@@ -148,6 +148,10 @@ class StudTransController extends Controller
                 // Add the priority_num to the transaction data
                 $transactionData = $studTrans->toArray();
                 $transactionData['priority_num'] = $queuedTransaction->priority_num;
+    
+                // Fetch the is_done value from the Queuing model
+                $transactionData['is_call'] = $queuedTransaction->is_call;
+    
                 $transactions[] = $transactionData;
             }
     
