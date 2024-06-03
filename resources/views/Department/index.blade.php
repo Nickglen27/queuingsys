@@ -25,14 +25,8 @@
     <head>
 
         <style>
-            .highlight-row {
-                background-color: #A7E6FF !important;
-                color: white;
-            }
-
-
-            .background-light {
-                background: #0a2342;
+            .modal-top {
+                margin-top: 10%;
             }
 
             .navbar {
@@ -56,120 +50,62 @@
             .navbar-brand {
                 font-family: 'Oregon', sans-serif;
                 animation: bounce 2s infinite;
-                font-size: 40px;
+                font-size: 28px;
                 font-weight: bold;
                 color: rgb(255, 253, 253);
+                /* Added this line to change text color */
             }
 
             .custom-button {
                 float: right;
-                margin-top: 5px;
-            }
-
-            .timezone {
-                font-size: 40px;
-                font-family: 'poppins', sans-serif;
-                color: rgb(255, 255, 255);
-                margin-right: 20px;
                 margin-top: 10px;
             }
 
-            .white-box {
-                background-color: white;
-                height: 650px;
-                border: 4px solid #ccc;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                padding: 0px;
-            }
-
-            .left-box {
-                width: 100%;
-                /* Adjusted to fit the content better */
-            }
-
-            .right-box {
-                width: 150%;
-                /* Adjusted to fit the content better */
-            }
-
-            .table th,
-            .table td {
-                text-align: center;
-                vertical-align: middle;
-            }
-
-            .header-title {
-                text-align: center;
-                font-size: 48px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                padding: 15px;
-                background-color: yellow;
-                border-radius: 5px;
-                color: #000000;
-            }
-
-            .header-right {
-                background-color: yellow;
-                padding: 10px;
-                text-align: center;
-            }
-
-            .header-right h2 {
-                margin: 0;
-                color: black;
+            .timezone {
                 font-size: 28px;
+                color: rgb(255, 255, 255);
+                margin-right: 20px;
+                margin-top: 15px;
             }
 
-            .container {
-                max-width: 95%;
-                /* Adjust container max width to fit content better */
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            th {
-                font-family: Arial, sans-serif;
-                /* Change the font-family as needed */
+            .archive-icon {
                 font-size: 24px;
-                /* Change the font-size as needed */
-                font-weight: bold;
-                /* You can change it to normal if you prefer */
+                color: #5e0b0e;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .archive-container {
                 text-align: left;
-                padding: 8px;
-                border-bottom: 6px solid #ddd;
+                margin-bottom: 20px;
             }
 
-            td {
-                font-family: 'poppins', sans-serif;
-                font-size: 20px;
-                padding: 8px;
-                border-bottom: 3px solid #ddd;
-
-
-            }
-
-            .tdnext {
-                color: red;
-                font-weight: bold;
-                font-size: 25px;
-
-            }
-
-            .tdserve {
-                color: red;
-                font-weight: bold;
-                font-size: 23px;
-
-            }
-
-            .green-highlight {
+            .green-header {
                 background-color: green;
+            }
+
+            .btn-group {
+                display: flex;
+                gap: 5px;
+                /* Adjust the gap between buttons as needed */
+            }
+
+            .btn-yellow {
+                background-color: yellow;
+                border-color: yellow;
+                color: black;
+            }
+
+            .btn-blue {
+                background-color: blue;
+                border-color: blue;
                 color: white;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 5px;
+                /* Adjust the gap between buttons as needed */
             }
         </style>
     </head>
@@ -210,11 +146,10 @@
         <table id="TransactionTable" class="table table-striped table-bordered" style="width: 100%;">
             <thead>
                 <tr>
-                    <th class="text-center">Priority No.</th>
-                    <th class="text-center">Student Name</th>
-                    <th class="text-center">Transaction Type</th>
-                    <th class="text-center">Actions</th>
-
+                    <th class="text-center" style="width: 12%;">Priority No.</th>
+                    <th class="text-center" tyle="width: 33%;">Name</th>
+                    <th class="text-center" style="width: 30%;">Transaction</th>
+                    <th class="text-center" style="width: 25%;">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -226,11 +161,11 @@
 
     <!-- Modal for Archiving -->
     <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl modal-top">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: green;">
-                    <h5 class="modal-title" id="archiveModalLabel" style="font-weight: bold; color: white;">Archive Data
-                    </h5>
+                    <h2 class="modal-title" id="archiveModalLabel" style="font-weight: bold; color: white;">Archive Data
+                    </h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -238,20 +173,18 @@
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 5%;">Priority No.</th>
-                                <th style="width: 30%;">Name</th>
-                                <th style="width: 30%;">Transaction</th>
-                                <th style="width: 30%;">Status</th>
-                                <th style="width: 25%;">Actions</th>
+                                <th class="text-center" style="width: 12%;">Priority No.</th>
+                                <th class="text-center" tyle="width: 33%;">Name</th>
+                                <th class="text-center" style="width: 30%;">Transaction</th>
+                                <th class="text-center" style="width: 15%;">Status</th>
+                                <th class="text-center" style="width: 10%;">Actions</th>
                             </tr>
+
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    {{-- <button type="button" class="btn btn-primary">Archive</button> --}}
-                </div>
+
             </div>
         </div>
     </div>
@@ -330,13 +263,17 @@
                             "title": "Actions",
                             "render": function(data, type, row) {
                                 return '<div class="text-center">' +
-                                    '<button class="btn btn-primary mr-2" style="width: 80px; height: 30px;" onclick="handleStatus(' +
-                                    row.id + ')"><i class="fa fa-phone"></i></button>' +
-                                    '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="isdone(' +
-                                    row.id + ')"><i class="fa fa-check"></i></button>' +
-                                    '<button class="btn btn-danger mr-2" style="width: 80px; height: 30px;" onclick="handleArchiveButtonClick(' +
-                                    row.id + ')"><i class="fa fa-archive"></i></button>' +
+                                    '<button class="btn btn-primary mr-3" style="width: 65px; height: 32px;" onclick="handleStatus(' +
+                                    row.id + ')">' +
+                                    '<i class="fa fa-phone" style="margin-right: 5px;"></i>&nbsp;</button>' +
+                                    '<button class="btn btn-success mr-3" style="width: 65px; height: 32px;" onclick="isdone(' +
+                                    row.id + ')">' +
+                                    '<i class="fa fa-check" style="margin-right: 5px;"></i>&nbsp;</button>' +
+                                    '<button class="btn btn-danger mr-3" style="width: 65px; height: 32px;" onclick="handleArchiveButtonClick(' +
+                                    row.id + ')">' +
+                                    '<i class="fa fa-archive" style="margin-right: 5px;"></i>&nbsp;</button>' +
                                     '</div>';
+
                             }
 
                         }
@@ -378,53 +315,44 @@
         // });
         function handleStatus(id) {
             $.ajax({
-                url: '/update-call/' + id,
+                url: '/update-status/' + id,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    is_call: 1, // Always set is_call to 1
+                    is_call: 1 // Always set is_call to 1
                 },
                 success: function(response) {
-                    // Handle success response
+                    // Handle success response, if needed
                     console.log(response);
-
-                    // Highlight the row if is_call is 1
-                    if (response.is_call === 1) {
-                        var table = $('#TransactionTable').DataTable();
-                        var rowIndex = response.rowIndex;
-                        table.row(rowIndex).node().classList.add('blue-row');
-                    }
+                    // Show success message using SweetAlert
+                    Swal.fire('Call Successful', 'Call has been made successfully!', 'success');
                 },
                 error: function(xhr) {
-                    // Handle error response
+                    // Handle error response, if needed
                     console.error(xhr.responseText);
-
-                    // Show SweetAlert error message
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'You can only call one at a time.'
-                    });
+                    // Show error message using SweetAlert
+                    Swal.fire('Error!', 'Error making the call. Please try again.', 'error');
                 }
             });
         }
 
 
         function isdone(id) {
-            // Show confirmation dialog
+            // Show SweetAlert confirmation dialog
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You want to mark this task as done?',
+                text: "Do you want to done?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, mark it as done!'
+                confirmButtonText: 'Yes, mark as done!',
+                cancelButtonText: 'No, cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Perform AJAX request to update the status
                     $.ajax({
-                        url: '/update-done/' + id,
+                        url: '/update-status/' + id,
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
@@ -435,22 +363,22 @@
                             console.log(response);
                             // Remove the row from DataTable
                             removeRowFromDataTable(id);
-                            // Optionally, provide feedback to the user
-                            Swal.fire(
-                                'Success!',
-                                'Task marked as done successfully.',
-                                'success'
-                            );
+                            // Show SweetAlert success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Task marked as done successfully!'
+                            });
                         },
                         error: function(xhr) {
-                            // Handle error response
+                            // Handle error response, if needed
                             console.error(xhr.responseText);
-                            // Show error message
-                            Swal.fire(
-                                'Error!',
-                                'You need to call it first before marking as done.',
-                                'error'
-                            );
+                            // Show SweetAlert error message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error marking task as done. Please try again.'
+                            });
                         }
                     });
                 }
@@ -459,39 +387,44 @@
 
 
         function handleArchiveButtonClick(id) {
-            // Perform AJAX request to update the archive
-            $.ajax({
-                url: '/update-archive/' + id,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    is_archive: 1 // Set is_archive to 1 for marking as archived
-                },
-                success: function(response) {
-                    // Handle success response
-                    console.log(response);
-                    // Remove the row from DataTable
-                    removeRowFromDataTable(id);
-                    // Show Swal notification
-                    Swal.fire({
-                        title: "Success",
-                        text: "Task archived successfully!",
-                        icon: "success",
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
+            // Display a confirmation dialog using SweetAlert
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Once archived, you will not be able to undo this action!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, archive it!',
+                cancelButtonText: 'No, cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If user confirms, perform AJAX request to update the status
+                    $.ajax({
+                        url: '/update-archive/' + id,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_archive: 1 // Set is_archive to 1 for marking as archived
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            console.log(response);
+                            // Remove the row from DataTable
+                            removeRowFromDataTable(id);
+                            // Show success message using SweetAlert
+                            Swal.fire('Archived!', 'Data has been archived.', 'success');
+                        },
+                        error: function(xhr) {
+                            // Handle error response
+                            console.error(xhr.responseText);
+                            // Show error message using SweetAlert
+                            Swal.fire('Error!', 'Error marking Data as archived. Please try again.',
+                                'error');
+                        }
                     });
-                },
-                error: function(xhr) {
-                    // Handle error response
-                    console.error(xhr.responseText);
-                    // Show SweetAlert notification
-                    Swal.fire({
-                        title: "Error",
-                        text: "You need to call it first before Archiving it",
-                        icon: "error",
-                        confirmButtonColor: '#d33',
-                        confirmButtonText: 'OK'
-                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // If user cancels, do nothing
+                    Swal.fire('Cancelled', 'Task archiving cancelled.', 'info');
                 }
             });
         }
@@ -503,7 +436,7 @@
 
             // Send an AJAX request to update the 'is_archive' value
             $.ajax({
-                url: '/update-unarchive/' + id, // Update the URL to match your backend endpoint
+                url: '/update-status/' + id, // Update the URL to match your backend endpoint
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken // Include CSRF token in headers
@@ -516,13 +449,26 @@
                     $('#archiveModal table').DataTable().rows(function(idx, data, node) {
                         return data.id == id;
                     }).remove().draw();
+                    // Show success message using SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Unarchived!',
+                        text: 'Data has been unarchived successfully.'
+                    });
                 },
                 error: function(xhr, status, error) {
                     // Handle errors
                     console.error('Error updating is_archive value:', error);
+                    // Show error message using SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Error unarchiving task. Please try again.'
+                    });
                 }
             });
         }
+
 
 
         // Function to remove the row from DataTable
@@ -568,15 +514,18 @@
             // Define DataTable columns
             var columns = [{
                     data: 'priority_num',
-                    title: 'Priority Number'
+                    title: 'Priority Number',
+                    className: 'text-center' // Center the data
                 },
                 {
                     data: 'student.Firstname',
-                    title: 'Student Firstname'
+                    title: 'Student Firstname',
+                    className: 'text-center' // Center the data
                 },
                 {
                     data: 'transaction.transaction_type',
-                    title: 'Transaction Type'
+                    title: 'Transaction Type',
+                    className: 'text-center' // Center the data
                 },
                 {
                     data: 'is_done',
@@ -584,7 +533,8 @@
                     render: function(data, type, row) {
                         return (data == 1) ? '<span class="badge bg-success">Done</span>' :
                             '<span class="badge bg-warning">Pending</span>';
-                    }
+                    },
+                    className: 'text-center' // Center the data
                 },
                 {
                     data: null,
@@ -594,15 +544,15 @@
                         return '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="handleUnArchiveButtonClick(' +
                             data.id + ',' + data.is_archive + ')" ' + isDoneButtonDisabled +
                             '><i class="fa fa-undo"></i></button>';
-                    }
-
+                    },
+                    className: 'text-center' // Center the data
                 }
             ];
 
             // Initialize DataTable
             $('#archiveModal table').DataTable({
                 destroy: true, // Destroy existing datatable before reinitializing
-                paging: false, // Remove pagination
+                paging: true, // Remove pagination
                 data: data,
                 columns: columns,
                 order: [
