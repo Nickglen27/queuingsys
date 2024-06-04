@@ -162,6 +162,13 @@
             padding: 8px;
             border-bottom: 3px solid #ddd;
         }
+
+        /* CHIWAN */
+
+         .sky-green-highlight {
+        background-color: #00FFCC; /* Sky green color */
+        transition: background-color 0.5s ease;
+    }
     </style>
 </head>
 
@@ -310,48 +317,60 @@
 
 
         function initializeDataTable(tableData) {
-            $('#WindowTable').DataTable({
-                destroy: true, // Destroy any existing DataTable instance before recreating it
-                data: tableData,
-                columns: [{
-                        data: 'window',
-                        render: function(data) {
-                            return 'Window ' + data;
-                        }
-                    },
-                    {
-                        data: 'student_id'
-                    },
-                    {
-                        data: 'departments'
-                    },
-                    {
-                        data: 'transaction_id' // Add column for transaction_id
-                    },
-                    {
-                        data: 'priority',
-                        render: function(data) {
-                            // Apply custom styling to the cell content
-                            return '<strong style="color: red; font-size: 30px;">' + data + '</strong>';
-                        }
-                    }
-                ],
-                dom: 't', // This removes the search and entries options
-                paging: false, // This disables pagination
-                info: false, // This disables the "Showing X of Y entries" info
-                ordering: true, // Enable sorting
-                language: {
-                    emptyTable: "Empty"
-                }, // Custom no data message
-                initComplete: function(settings, json) {
-                    // Remove the sorting arrows
-                    var headers = $(this).DataTable().columns().header();
-                    $(headers).removeClass('sorting');
-                    $(headers).removeClass('sorting_asc');
-                    $(headers).removeClass('sorting_desc');
+    $('#WindowTable').DataTable({
+        destroy: true, // Destroy any existing DataTable instance before recreating it
+        data: tableData,
+        columns: [
+            {
+                data: 'window',
+                render: function(data) {
+                    return '<strong style="color: #0a2342; font-size: 30px; font-family: Arial, sans-serif;">Window ' + data + '</strong>';
                 }
-            });
+            },
+            {
+                data: 'student_id',
+                render: function(data) {
+                    return '<strong style="color: #0a2342; font-size: 32px; font-family: Arial, sans-serif;">' + data + '</strong>';
+                }
+            },
+            {
+                data: 'departments',
+                render: function(data) {
+                    return '<strong style="color: #0a2342; font-size: 32px; font-family: Arial, sans-serif;">' + data + '</strong>';
+                }
+            },
+            {
+                data: 'transaction_id', // Add column for transaction_id
+                render: function(data) {
+                    return '<strong style="color: #0a2342; font-size: 32px; font-family: Arial, sans-serif;">' + data + '</strong>';
+                }
+            },
+            {
+                data: 'priority',
+                render: function(data) {
+                    // Apply custom styling to the cell content
+                    return '<strong style="color: red; font-size: 53px; font-family: Arial, sans-serif; -webkit-text-stroke: 2px black;">' + data + '</strong>';
+                }
+            }
+        ],
+        dom: 't', // This removes the search and entries options
+        paging: false, // This disables pagination
+        info: false, // This disables the "Showing X of Y entries" info
+        ordering: true, // Enable sorting
+        language: {
+            emptyTable: "Empty"
+        }, // Custom no data message
+        initComplete: function(settings, json) {
+            // Remove the sorting arrows
+            var headers = $(this).DataTable().columns().header();
+            $(headers).removeClass('sorting');
+            $(headers).removeClass('sorting_asc');
+            $(headers).removeClass('sorting_desc');
         }
+    });
+}
+
+
         // let previousResponse = null;
 
         // function highlightNewRows(response) {
@@ -463,57 +482,62 @@
         //     setInterval(displayDepartmentAndPriority, 5000); // 5000 milliseconds = 5 seconds
         // });
         function fetchAndPopulateQueuingTable() {
-            $.ajax({
-                url: '/fetch-next-que',
-                method: 'GET',
-                dataType: 'json',
-                success: function(response) {
-                    const table = $('#nextQueuingTable').DataTable({
-                        destroy: true, // Destroy existing DataTable before creating a new one
-                        paging: false,
-                        searching: false,
-                        info: false,
-                        columns: [{
-                                title: 'First Name',
-                                orderable: false
-                            }, // Disable sorting
-                            {
-                                title: 'Priority Number',
-                                orderable: false
-                            } // Disable sorting
-                        ],
-                        order: [], // Remove sorting arrows
-                        data: response.map(item => [item.Firstname, item
-                            .priority_num
-                        ]) // Mapping response data to match column structure
-                    });
-                    // Highlight new rows if data is different
-                    // Assuming previousResponse is defined elsewhere in the script
-                    response.forEach(function(item, index) {
-                        if (previousResponse && JSON.stringify(previousResponse[index]) !== JSON
-                            .stringify(item)) {
-                            const row = table.row(index).node();
-                            $(row).addClass('green-highlight');
-                            setTimeout(function() {
-                                $(row).removeClass('green-highlight');
-                            }, 5000);
+    $.ajax({
+        url: '/fetch-next-que',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            const table = $('#nextQueuingTable').DataTable({
+                destroy: true, // Destroy existing DataTable before creating a new one
+                paging: false,
+                searching: false,
+                info: false,
+                columns: [
+                    {
+                        title: 'First Name',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return '<strong style="color: #0a2342; font-size: 32px; font-family: Arial, sans-serif;">' + data + '</strong>';
                         }
-                    });
+                    }, // Disable sorting and apply blue color to text
+                    {
+                        title: 'Priority Number',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return '<strong style="color: red; font-size: 40px; font-family: Arial, sans-serif; -webkit-text-stroke: 2px black;">' + data + '</strong>';
+                        }
+                    } // Disable sorting and apply red color to text
+                ],
+                order: [], // Remove sorting arrows
+                data: response.map(item => [item.Firstname, item.priority_num]) // Mapping response data to match column structure
+            });
 
-                    // Update the previous response
-                    previousResponse = response;
-                },
-                error: function(xhr, status, error) {
-                    console.error('Failed to fetch data:', error);
+            // Highlight new rows if data is different
+            // Assuming previousResponse is defined elsewhere in the script
+            response.forEach(function(item, index) {
+                if (previousResponse && JSON.stringify(previousResponse[index]) !== JSON.stringify(item)) {
+                    const row = table.row(index).node();
+                    $(row).addClass('green-highlight');
+                    setTimeout(function() {
+                        $(row).removeClass('green-highlight');
+                    }, 5000);
                 }
             });
-        }
 
-        $(document).ready(function() {
-            // Fetch data and populate the table at regular intervals
-            fetchAndPopulateQueuingTable();
-            setInterval(fetchAndPopulateQueuingTable, 2000); // Refresh every 2 seconds
-        });
+            // Update the previous response
+            previousResponse = response;
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to fetch data:', error);
+        }
+    });
+}
+
+$(document).ready(function() {
+    // Fetch data and populate the table at regular intervals
+    fetchAndPopulateQueuingTable();
+    setInterval(fetchAndPopulateQueuingTable, 2000); // Refresh every 2 seconds
+});
     </script>
 
 </body>
