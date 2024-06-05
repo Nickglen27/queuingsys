@@ -1,9 +1,5 @@
 <?php
 
-// app/Http/Controllers/TransactionController.php
-
-// App\Http\Controllers\TransactionController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
@@ -11,7 +7,7 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
- public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'department_id' => 'nullable|exists:departments,id',
@@ -30,33 +26,57 @@ class TransactionController extends Controller
         }
     }
 
-        public function getTransactionsByDepartment($departmentId)
-        {
-            try {
-                // Validate departmentId (optional but recommended)
-                if (!$departmentId) {
-                    return response()->json(['message' => 'Department ID is required'], 400);
-                }
-        
-                // Retrieve transactions for the specified department
-                $transactions = Transaction::where('department_id', $departmentId)->get();
-        
-                // Check if transactions are found
-                if ($transactions->isEmpty()) {
-                    return response()->json(['message' => 'No transactions found for the specified department'], 404);
-                }
-        
-                // Return the transactions
-                return response()->json(['transactions' => $transactions], 200);
-            } catch (\Exception $e) {
-                // Log the exception for debugging
-                Log::error('Failed to fetch transactions: ' . $e->getMessage());
-        
-                // Return an error response
-                return response()->json(['message' => 'Failed to fetch transactions', 'error' => $e->getMessage()], 500);
+    public function getTransactionsByDepartment($departmentId)
+    {
+        try {
+            // Validate departmentId (optional but recommended)
+            if (!$departmentId) {
+                return response()->json(['message' => 'Department ID is required'], 400);
             }
+
+            // Retrieve transactions for the specified department
+            $transactions = Transaction::where('department_id', $departmentId)->get();
+
+            // Check if transactions are found
+            if ($transactions->isEmpty()) {
+                return response()->json(['message' => 'No transactions found for the specified department'], 404);
+            }
+
+            // Return the transactions
+            return response()->json(['transactions' => $transactions], 200);
+        } catch (\Exception $e) {
+            // Log the exception for debugging
+            Log::error('Failed to fetch transactions: ' . $e->getMessage());
+
+            // Return an error response
+            return response()->json(['message' => 'Failed to fetch transactions', 'error' => $e->getMessage()], 500);
         }
-        
+    }
+
+    public function update(Request $request, Transaction $transaction)
+{
+    $validatedData = $request->validate([
+        'transaction_type' => 'required|string|max:255',
+    ]);
+
+    $transaction->update($validatedData);
+
+    return response()->json(['success' => true]);
+}
+public function show($id)
+{
+    // Attempt to find the transaction by ID
+    $transaction = Transaction::find($id);
+
+    // Check if the transaction exists
+    if ($transaction) {
+        // Return a successful response with the transaction data
+        return response()->json(['success' => true, 'transaction' => $transaction]);
+    } else {
+        // Return a failure response with an appropriate message and a 404 status code
+        return response()->json(['success' => false, 'message' => 'Transaction not found'], 404);
+    }
+}
 
     
-    }
+}

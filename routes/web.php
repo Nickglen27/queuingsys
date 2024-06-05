@@ -72,10 +72,23 @@ Route::delete('/departments/{name}', [DepartmentController::class, 'destroy'])->
 Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Define route name for transactions.store
 Route::get('/transactions/by-department/{departmentId}', [TransactionController::class, 'getTransactionsByDepartment']);
 
+
+Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+
+Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+
+Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
+
 use App\Http\Controllers\Auth\UserController;
 
 Route::post('/register', [UserController::class, 'register'])->name('user.store');
 Route::get('/registered-user', [UserController::class, 'ShowUsers']);
+
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+
+
 
 
 Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);

@@ -113,8 +113,8 @@
         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-sidebar modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                    <div class="modal-header" style="background-color: #0d6efd;">
+                        <h5 class="modal-title" id="addUserModalLabel" style="color: white;">Add User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -159,7 +159,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary"data-bs-dismiss="modal">Close</button>
                         <button type="submit" form="addUserForm" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
@@ -167,7 +167,65 @@
         </div>
 
 
-
+      <!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0d6efd;">
+                <h5 class="modal-title" id="editUserModalLabel" style="color: white;">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    @csrf <!-- Add CSRF token -->
+                    <input type="hidden" id="editUserId" name="id"> <!-- Hidden input field for user ID -->
+                    <div class="mb-3">
+                        <label for="editUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="editUsername" name="name" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" placeholder="Enter email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="editPassword" name="password" placeholder="Enter password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserType" class="form-label">User Type</label>
+                        <input type="text" class="form-control" id="editUserType" name="user_type" placeholder="Enter user type">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editStatus" name="status">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDepartment" class="form-label">Department</label>
+                        <select class="form-select" id="editDepartment" name="department_id">
+                            <option selected>Select department...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editWindow" class="form-label">Window</label>
+                        <select class="form-select" id="editWindow" name="window">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="editUserForm" class="btn btn-primary edit-user-btn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
         <div class="container mt-5">
             <table id="user_dataTable" class="table table-striped table-bordered">
@@ -206,159 +264,235 @@
 
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <!-- Your custom JavaScript -->
         <script>
-            $(document).ready(function() {
-                $('#user_dataTable').DataTable({
-                    paging: true,
-                    searching: true
-                });
-            });
+$(document).ready(function () {
+    // Initialize DataTable
+    $('#user_dataTable').DataTable({
+        paging: true,
+        searching: true
+    });
 
-            $(document).ready(function() {
-                // Function to fetch user data and populate the table
-                function fetchUsers() {
-                    $.ajax({
-                        url: '/registered-user',
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            console.log('User data retrieved successfully:', response);
-                            displayUsers(response.data);
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            console.error('Error fetching user data:', textStatus, errorThrown);
-                        }
-                    });
+    // Function to fetch user data and populate the table
+    function fetchUsers() {
+        $.ajax({
+            url: '/registered-user',
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                console.log('User data retrieved successfully:', response);
+                displayUsers(response.data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error('Error fetching user data:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    // Function to display users in the DataTable
+    function displayUsers(users) {
+        var table = $('#user_dataTable').DataTable();
+        table.clear().destroy(); // Destroy existing DataTable and clear its data
+        $('#user_dataTable').DataTable({
+            data: users,
+            columns: [
+                { data: 'name', title: 'Username' },
+                { data: 'email', title: 'Email' },
+                {
+                    data: 'status',
+                    title: 'Status',
+                    render: function (data) {
+                        return data === 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
+                    }
+                },
+                { data: 'department_id', title: 'Department' },
+                { data: 'window', title: 'Window' },
+                {
+                    data: null,
+                    title: 'Action',
+                    render: function (data, type, row) {
+                        return '<button class="btn btn-sm btn-primary edit-user" data-bs-toggle="modal" data-bs-target="#editUserModal" data-id="' + row.id + '"><i class="fas fa-edit"></i> Edit</button>'; +
+                            '<button class="btn btn-sm btn-danger delete-user" data-id="' + data.id + '"><i class="fas fa-trash"></i></button>';
+                    }
                 }
+            ]
+        });
+    }
 
-                // Function to display users in the DataTable
-                function displayUsers(users) {
-                    $('#user_dataTable').DataTable().clear().destroy(); // Destroy existing DataTable and clear its data
-                    $('#user_dataTable').DataTable({
-                        data: users,
-                        columns: [{
-                                data: 'name',
-                                title: 'Username'
-                            },
-                            {
-                                data: 'email',
-                                title: 'Email'
-                            },
-                            {
-                                data: 'status',
-                                title: 'Status',
-                                render: function(data) {
-                                    if (data === 1) {
-                                        return '<span class="badge bg-success">Active</span>';
-                                    } else {
-                                        return '<span class="badge bg-danger">Inactive</span>';
-                                    }
-                                }
-                            },
-                            {
-                                data: 'department_id',
-                                title: 'Department'
-                            },
-                            {
-                                data: 'window',
-                                title: 'Window'
-                            },
+    // Call fetchUsers function when the page loads
+    fetchUsers();
 
-                            {
-                                data: null,
-                                title: 'Action',
-                                render: function(data, type, row) {
-                                    return '<button class="btn btn-sm btn-primary edit-user" data-id="' +
-                                        data.id + '">' +
-                                        '<i class="fas fa-edit"></i></button> ' +
-                                        '<button class="btn btn-sm btn-danger delete-user" data-id="' +
-                                        data.id + '">' +
-                                        '<i class="fas fa-trash"></i></button>';
-                                }
-                            }
-                        ]
-                    });
+    // Fetch departments for modals
+    function fetchDepartments(selectElement) {
+        $.ajax({
+            url: '{{ route('departments.all') }}',
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                var departments = response.departments;
+                selectElement.empty();
+                selectElement.append('<option selected>Select department...</option>');
+                $.each(departments, function (index, department) {
+                    selectElement.append('<option value="' + department.id + '">' + department.name + '</option>');
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching departments:', error);
+            }
+        });
+    }
+
+    // Fetch departments when the Add User modal is shown
+    $('#addUserModal').on('shown.bs.modal', function () {
+        fetchDepartments($('#department'));
+    });
+
+    // Add user form submission
+    $('#addUserForm').submit(function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        var formData = {
+            name: $('#username').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            department_id: $('#department').val(),
+            user_type: $('#user_type').val(),
+            window: $('#window').val()
+        };
+
+        // Submit the form data using AJAX
+        $.ajax({
+            url: '/register',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                console.log('User added successfully:', response);
+                $('#addUserModal').modal('hide');
+                fetchUsers(); // Refresh the user table
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error('Error adding user:', textStatus, errorThrown);
+                if (xhr.status === 422) {
+                    console.error('Validation errors:', xhr.responseJSON);
+                } else if (xhr.status === 404) {
+                    console.error('API endpoint not found.');
+                } else if (xhr.status === 500) {
+                    console.error('Server error.');
+                } else {
+                    console.error('Unexpected error:', xhr.status);
                 }
+            }
+        });
+    });
 
-                // Call fetchUsers function when the page loads
-                fetchUsers();
-            });
+    // Fetch departments when the Edit User modal is shown
+    $('#editUserModal').on('shown.bs.modal', function () {
+        fetchDepartments($('#editDepartment'));
+    });
 
+});
+</script>
+<script>
+    $(document).ready(function() {
+        // Function to update user details
+        function updateUserDetails(userId, formData) {
+            console.log('Updating user with ID:', userId);
+            console.log('Form data:', formData);
 
-            $(document).ready(function() {
-                // Fetch departments when the modal is shown
-                $('#addUserModal').on('shown.bs.modal', function() {
-                    $.ajax({
-                        url: '{{ route('departments.all') }}',
-                        method: 'GET',
-                        dataType: 'json', // Ensure the response is JSON
-                        success: function(response) {
-                            var departments = response.departments;
-                            var departmentSelect = $('#department');
-                            departmentSelect.empty(); // Clear existing options
-                            departmentSelect.append(
-                                '<option selected>Select department...</option>');
-
-                            $.each(departments, function(index, department) {
-                                departmentSelect.append('<option value="' + department.id +
-                                    '">' + department.name + '</option>');
-                            });
-                        },
-                        error: function(error) {
-                            console.log('Error fetching departments:', error);
+            $.ajax({
+                type: 'POST',
+                url: '/users/' + userId,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Add CSRF token header
+                },
+                success: function(response) {
+                    console.log('User data updated successfully:', response);
+                    $('#editUserModal').modal('hide'); // Hide the modal
+                    // Display SweetAlert alert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'User data updated successfully!',
+                        showConfirmButton: false, // Remove the "OK" button
+                        timer: 2000, // Auto close the alert after 2 seconds
+                        timerProgressBar: true,
+                        didClose: function() {
+                            location.reload(); // Reload the page
                         }
                     });
-                });
-                $('#addUserForm').submit(function(event) {
-                    event.preventDefault(); // Prevent the default form submission
-                    // Get the selected department's ID
-                    var selectedDepartmentId = $('#department').val();
-                    console.log('Selected department ID:', selectedDepartmentId); // Log the selected ID
-                    // Get the values of all form fields except confirmation password
-                    var formData = {
-                        name: $('#username').val(),
-                        email: $('#email').val(),
-                        password: $('#password').val(),
-                        department_id: $('#department').val(), // Pass the department's ID
-                        user_type: $('#user_type').val(),
-                        window: $('#window').val() // Add the window value
-                    };
-
-                    // Submit the form data using AJAX
-                    $.ajax({
-                        url: '/register',
-                        method: 'POST',
-                        data: formData,
-                        dataType: 'json',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(response) {
-                            console.log('User added successfully:', response);
-                            $('#addUserModal').modal('hide');
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            console.error('Error adding user:', textStatus, errorThrown);
-                            console.error('Response Text:', xhr.responseText);
-                            console.error('Status:', xhr.status);
-                            console.error('Error Thrown:', errorThrown);
-
-                            if (xhr.status === 422) {
-                                console.error('Validation errors:', xhr.responseJSON);
-                            } else if (xhr.status === 404) {
-                                console.error('API endpoint not found.');
-                            } else if (xhr.status === 500) {
-                                console.error('Server error.');
-                            } else {
-                                console.error('Unexpected error:', xhr.status);
-                            }
-                        }
-                    });
-                });
-
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating user data:', error);
+                    // Log the error response from the server
+                    console.error('Error response:', xhr.responseText);
+                    // You can display an error message to the user or handle the error in any other way
+                }
             });
-        </script>
-</body>
+        }
 
+        // Event listener for when the edit user modal is shown
+        $('#editUserModal').on('shown.bs.modal', function (e) {
+            // Get the ID of the selected user from the modal's data-id attribute
+            var userId = $(e.relatedTarget).data('id');
+
+            // Log the selected user ID
+            console.log('User ID requested:', userId);
+
+            // Check if userId is defined
+            if (userId === undefined) {
+                console.error('User ID is undefined');
+                return; // Exit the function if userId is undefined
+            }
+
+            // Fetch user details
+            $.ajax({
+                type: 'GET',
+                url: '/users/' + userId,
+                success: function(response) {
+                    // Check if the response object has the expected properties
+                    if (response && typeof response === 'object' && 'id' in response && 'name' in response && 'email' in response && 'status' in response && 'department_id' in response && 'window' in response) {
+                        // Populate the modal fields with the retrieved user details
+                        $('#editUserId').val(response.id);
+                        $('#editUsername').val(response.name);
+                        $('#editEmail').val(response.email);
+                        $('#editPassword').val(''); // Clear password field
+                        $('#editUserType').val(response.status);
+                        $('#editStatus').val(response.status);
+                        $('#editDepartment').val(response.department_id);
+                        $('#editWindow').val(response.window);
+                    } else {
+                        console.error('Invalid response format:', response);
+                        // Display an error message or handle the error in any other way
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error fetching user details:', error);
+                    // You can display an error message to the user or handle the error in any other way
+                }
+            });
+        });
+
+        // Event listener for form submission to update user data
+        $('#editUserForm').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            var userId = $('#editUserId').val(); // Get user ID
+            var formData = $(this).serialize(); // Serialize form data
+
+            console.log('Form submitted for user ID:', userId);
+            console.log('Form data:', formData);
+            
+            // Update user details
+            updateUserDetails(userId, formData);
+        });
+    });
+</script>
+
+    </body>
 </html>
+
