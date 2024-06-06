@@ -279,13 +279,17 @@
                 <div class="toggle-switch" style="margin-top: 30px;">
                 </div>
                 <div style="display: flex; flex-direction: column;">
-                    <li class="" style="display: inline-block; vertical-align: middle; margin-top: 5px;">
-                        <a href="#">
+                    <li style="display: inline-block; vertical-align: middle; margin-top: 5px;">
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                        <a href="#" id="logout-link">
                             <i class='bx bx-log-out icon'></i>
                             <span class="text nav-text">Logout</span>
                         </a>
                     </li>
                 </div>
+
                 </li>
             </div>
     </nav>
@@ -301,6 +305,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
     <script>
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Logged Out!',
+                text: 'You have been successfully logged out.',
+                icon: 'success',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                willClose: () => {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        });
         const body = document.querySelector('body'),
             sidebar = body.querySelector('nav.sidebar'),
             toggle = body.querySelector(".toggle"),

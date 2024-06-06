@@ -21,7 +21,6 @@
 
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 
-
     <style>
         /* Google Font Import - Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -110,6 +109,7 @@
         }
     </style>
 </head>
+
 <!-- Include the sidebar -->
 @include('sidebar')
 
@@ -123,7 +123,6 @@
     </nav>
     <div id="main-content" class="container mt-4">
         <div class="d-flex justify-content-between align-items-center">
-
             <!-- Buttons moved to the right side -->
             <div class="d-flex justify-content-end align-items-center w-100">
                 <button class="btn btn-primary custom-button me-3" data-bs-toggle="modal"
@@ -179,6 +178,7 @@
                             <tr>
                                 <th style="width: 20px;"></th>
                                 <th>Transaction Type</th>
+                                <th>Action</th> <!-- Add a column for action buttons -->
                                 <!-- Add more columns as needed -->
                             </tr>
                         </thead>
@@ -193,6 +193,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Add Transaction Modal -->
     <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel"
@@ -228,6 +230,71 @@
         </div>
     </div>
 
+    <!-- Edit Transaction Modal -->
+    <div class="modal fade" id="editTransactionModal" tabindex="-1" role="dialog"
+        aria-labelledby="editTransactionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title" id="editTransactionModalLabel" style="color: white;">Edit Transaction
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form to edit transaction details -->
+                    <form id="editTransactionForm">
+                        <div class="form-group">
+                            <label for="editTransactionType">Transaction Type</label>
+                            <input type="text" class="form-control" id="editTransactionType"
+                                placeholder="Enter transaction type">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveEditTransactionBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Edit Department Modal -->
+    <div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-labelledby="editDepartmentModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDepartmentModalLabel">Edit Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDepartmentForm">
+                        @csrf
+                        <input type="hidden" id="editDepartmentId" name="departmentId">
+                        <div class="mb-3">
+                            <label for="editDepartmentName" class="form-label">Department Name</label>
+                            <input type="text" class="form-control" id="editDepartmentName" name="departmentName"
+                                required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="saveEditDepartment">Save
+                                changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <div id="data-table-container">
         <div class="container mt-7">
             <table id="Departments" class="table table-sm table table-striped table-bordered">
@@ -246,13 +313,15 @@
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-
     <script>
         $(document).ready(function() {
             // Fetch departments and populate DataTable
             fetchDepartments();
             $('#Departments').DataTable();
         });
+
+        // Flag to track whether an alert is being displayed
+        var isAlertDisplayed = false;
 
         $(document).ready(function() {
             $('#saveDepartment').click(function() {
@@ -267,33 +336,49 @@
                     },
                     success: function(response) {
                         if (response.success) {
+                            if (!isAlertDisplayed) {
+                                showSuccessAlert('Department added successfully.');
+                                isAlertDisplayed = true;
+                            }
                             $('#addDepartmentModal').modal('hide');
                             $('#departmentName').val('');
                             // Refresh departments and DataTable after adding a department
                             fetchDepartments();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'Department added successfully.'
-                            });
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message
-                            });
+                            if (!isAlertDisplayed) {
+                                showErrorAlert(response.message);
+                                isAlertDisplayed = true;
+                            }
                         }
                     },
                     error: function(xhr) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: 'An error occurred while adding the department.'
-                        });
+                        if (!isAlertDisplayed) {
+                            showErrorAlert('An error occurred while adding the department.');
+                            isAlertDisplayed = true;
+                        }
                     }
                 });
             });
         });
+
+        function showSuccessAlert(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message,
+                onClose: () => isAlertDisplayed = false // Reset the flag
+            });
+        }
+
+        function showErrorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: message,
+                onClose: () => isAlertDisplayed = false // Reset the flag
+            });
+        }
+
 
         // Function to fetch and populate the departments table
         function fetchDepartments() {
@@ -307,15 +392,24 @@
                         <tr>
                             <td>${department.name}</td>
                             <td>
-    <button class="btn btn-primary custom-button me-2 view-transaction-btn" 
-            data-department-id="${department.id}" 
-            data-bs-toggle="modal" 
-            data-bs-target="#viewTransactionsModal" 
-            style="font-size: 13px; text-align: center;">
-        View Transaction
-    </button>
-</td>
-                            <td><button class="btn btn-danger btn-sm" onclick="deleteDepartment('${department.name}')"><i class="fas fa-trash-alt"></i></button></td>
+                                <button class="btn btn-primary custom-button me-2 view-transaction-btn" 
+                                    data-department-id="${department.id}" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewTransactionsModal" 
+                                    style="font-size: 13px; text-align: center;">
+                                    View Transaction
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary custom-button me-2 edit-department-btn" 
+                                    data-department-id="${department.id}" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editDepartmentModal" 
+                                    style="font-size: 13px; text-align: center;">
+                                    <i class="fas fa-edit"></i>
+                                    
+                                </button>
+                            </td>
                         </tr>
                     `;
                     });
@@ -333,6 +427,92 @@
                 }
             });
         }
+
+        // Function to populate department select in add transaction modal
+        function populateDepartmentSelect() {
+            $.ajax({
+                url: '{{ route('departments.all') }}',
+                method: 'GET',
+                success: function(response) {
+                    // Clear existing options
+                    $('#departmentSelect').empty();
+                    // Populate options with departments fetched from the server
+                    response.departments.forEach(function(
+                        department, index) {
+                        $('#departmentSelect').append(
+                            `<option value="${department.id}">${department.name}</option>`);
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while fetching the department list.'
+                    });
+                }
+            });
+        }
+
+        // Function to handle click event on "Edit" button and populate the edit modal
+        $(document).on('click', '.edit-department-btn', function() {
+            var departmentId = $(this).data('department-id');
+            var departmentName = $(this).closest('tr').find('td:first')
+                .text(); // Get the department name from the table cell
+
+            $('#editDepartmentId').val(departmentId);
+            $('#editDepartmentName').val(departmentName);
+        });
+
+        // Save edited department
+        $('#saveEditDepartment').click(function() {
+            var departmentId = $('#editDepartmentId').val();
+            var departmentName = $('#editDepartmentName').val();
+
+            $.ajax({
+                url: '/departments/' + departmentId, // Correct URL for updating department by ID
+                method: 'PUT', // Using PUT method for updating
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        'content') // Add CSRF token to headers
+                },
+                data: {
+                    name: departmentName
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#editDepartmentModal').modal('hide');
+                        fetchDepartments();
+                        // Display SweetAlert alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Department updated successfully!',
+                            showConfirmButton: false, // Remove the "OK" button
+                            timer: 2000, // Auto close the alert after 2 seconds
+                            timerProgressBar: true,
+                            // didClose: function() {
+                            //     location.reload(); // Reload the page
+                            // }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while updating the department.'
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
         // Function to fetch departments and populate the select input
         function populateDepartmentSelect() {
             $.ajax({
@@ -417,17 +597,11 @@
             });
         };
 
-        // Fetch departments when the "Get All Departments" button is clicked
-        $('#getDepartmentsBtn').click(function() {
-            fetchDepartments();
-        });
-
         // Function to handle transaction creation
         function createTransaction() {
             // Retrieve input values
             var transactionType = $('#transactionInput').val();
-            var departmentId = $('#departmentSelect').val();
-
+            var departmentId = $('#departmentSelect').val(); // Get the selected department ID from the dropdown menu
             // Make AJAX request
             $.ajax({
                 url: '{{ route('transactions.store') }}',
@@ -438,23 +612,36 @@
                     transaction_type: transactionType
                 },
                 success: function(response) {
-                    // Handle success
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Transaction created successfully!'
-                    });
-                    // Optionally, you can perform additional actions here, such as updating UI or closing the modal
+                    if (!isAlertDisplayed) {
+                        showSuccessAlert('Transaction created successfully!');
+                        isAlertDisplayed = true;
+                    }
                     $('#addTransactionModal').modal('hide');
                 },
                 error: function(xhr) {
-                    // Handle error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Failed to create transaction. Error: ' + xhr.responseText
-                    });
+                    if (!isAlertDisplayed) {
+                        showErrorAlert('Failed to create transaction. Error: ' + xhr.responseText);
+                        isAlertDisplayed = true;
+                    }
                 }
+            });
+        }
+
+        function showSuccessAlert(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message,
+                onClose: () => isAlertDisplayed = false // Reset the flag
+            });
+        }
+
+        function showErrorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: message,
+                onClose: () => isAlertDisplayed = false // Reset the flag
             });
         }
 
@@ -470,7 +657,6 @@
         });
 
         // Function to fetch transactions for a specific department and populate the modal body
-        // Function to fetch transactions for a specific department and populate the modal body
         function fetchTransactionsByDepartment(departmentId) {
             $.ajax({
                 url: `/transactions/by-department/${departmentId}`,
@@ -482,19 +668,168 @@
                     <tr>
                         <td>${index + 1}</td>
                         <td>${transaction.transaction_type}</td>
-                        <!-- Add more columns as needed -->
+                        <td>
+                            <button class="btn btn-secondary edit-transaction-btn" data-transaction-id="${transaction.id}">
+                                <i class="fas fa-edit"></i> <!-- Font Awesome edit icon -->
+                            </button>
+                        </td>
                     </tr>
                 `;
                     });
                     $('#transactionsBody').html(
-                    transactionRows); // Populate the modal body with transaction types
+                        transactionRows); // Populate the modal body with transaction types
                 },
                 error: function(xhr) {
                     $('#transactionsBody').html('<tr><td colspan="2">No Available Transaction Type.</td></tr>');
                 }
             });
         }
+
+        // Function to handle click event on "Edit" button and populate the edit modal
+        $(document).on('click', '.edit-transaction-btn', function() {
+            // Here, you can implement the logic to populate the edit modal based on the transaction id
+            var transactionId = $(this).data('transaction-id');
+            // For demonstration purposes, let's just log the transaction id to console
+            console.log('Edit Transaction Id:', transactionId);
+            // Show the edit transaction modal
+            $('#editTransactionModal').modal('show');
+        });
+
+        // Event listener for closing the edit transaction modal using close button in the modal body
+        $('#editTransactionModal .modal-footer .btn-secondary').click(function() {
+            $('#editTransactionModal').modal('hide');
+        });
+
+        // Event listener for closing the edit transaction modal using the close icon button in the modal header
+        $('#editTransactionModal .modal-header .close').click(function() {
+            $('#editTransactionModal').modal('hide');
+        });
+        // Flag to track whether an alert is being displayed
+        var isAlertDisplayed = false;
+
+        // Function to update a transaction
+        function updateTransaction(transactionId, transactionType) {
+            $.ajax({
+                url: `/transactions/${transactionId}`, // URL for updating transaction by ID
+                method: 'PUT', // Using POST method for updating
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Add CSRF token to headers
+                },
+                data: {
+                    transaction_type: transactionType
+                },
+                success: function(response) {
+                    if (response.success) {
+                        if (!isAlertDisplayed) {
+                            showSuccessAlert();
+                            isAlertDisplayed = true;
+                        }
+                    } else {
+                        if (!isAlertDisplayed) {
+                            showErrorAlert(response.message);
+                            isAlertDisplayed = true;
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    if (!isAlertDisplayed) {
+                        showErrorAlert('An error occurred while updating the transaction.');
+                        isAlertDisplayed = true;
+                    }
+                }
+            });
+        }
+
+        function showSuccessAlert() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Transaction updated successfully!',
+                showConfirmButton: false, // Remove the "OK" button
+                timer: 2000, // Auto close the alert after 2 seconds
+                timerProgressBar: true,
+                didClose: function() {
+                    // location.reload(); // Reload the page
+                    isAlertDisplayed = false; // Reset the flag
+                }
+            });
+        }
+
+        function showErrorAlert(errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: errorMessage,
+                onClose: () => isAlertDisplayed = false // Reset the flag
+            });
+        }
+
+
+
+        // Event listener for "Save Changes" button click in the edit transaction modal
+        $('#saveEditTransactionBtn').click(function() {
+            var transactionId = $('#editTransactionType').data('transaction-id');
+            var transactionType = $('#editTransactionType').val();
+            updateTransaction(transactionId, transactionType);
+        });
+
+        // Function to fetch transaction details by ID and populate the edit modal
+        function fetchTransactionDetails(transactionId) {
+            $.ajax({
+                url: `/transactions/${transactionId}`,
+                method: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        // Populate the edit form with transaction data
+                        $('#editTransactionType').val(response.transaction.transaction_type);
+                        // Set data attribute for transaction ID
+                        $('#editTransactionType').data('transaction-id', response.transaction.id);
+                        // Show the edit transaction modal
+                        $('#editTransactionModal').modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while fetching the transaction details.'
+                    });
+                }
+            });
+        }
+
+        // Event listener for the "Edit" button click
+        $(document).on('click', '.edit-transaction-btn', function() {
+            var transactionId = $(this).data('transaction-id');
+            fetchTransactionDetails(transactionId);
+        });
+
+        // Event listener for "Save Changes" button click in the edit transaction modal
+        $('#saveEditTransactionBtn').click(function() {
+            var transactionId = $('#editTransactionType').data('transaction-id');
+            var transactionType = $('#editTransactionType').val();
+            updateTransaction(transactionId, transactionType);
+        });
+
+        // Event listener for closing the edit transaction modal using the close button in the modal body
+        $('#editTransactionModal .modal-footer .btn-secondary').click(function() {
+            $('#editTransactionModal').modal('hide');
+        });
+
+        // Event listener for closing the edit transaction modal using the close icon button in the modal header
+        $('#editTransactionModal .modal-header .close').click(function() {
+            $('#editTransactionModal').modal('hide');
+        });
     </script>
+
+
+
 
 </body>
 

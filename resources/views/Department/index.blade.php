@@ -178,7 +178,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #5e0b0e;">
         <div class="container">
             <div class="navbar-brand" href="#">
-                <h1>{{ Auth::user()->department->name }} - Window: {{ Auth::user()->window }}</h1>
+                @if (Auth::check() && Auth::user()->department && Auth::user()->window)
+                    <h1>{{ Auth::user()->department->name }} - Window: {{ Auth::user()->window }}</h1>
+                @else
+                    <script>
+                        window.location.href = "{{ route('login') }}";
+                    </script>
+                @endif
+
             </div>
             <strong>
                 <div class="timezone"><span id="beijing-time"></span></div>
@@ -271,21 +278,21 @@
     <!-- Select2 JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
-        // Define the functions to handle the button clicks
-        function handleCall(id) {
-            console.log('Call button clicked for row with id: ' + id);
-            // Add your handling code here
-        }
+        // // Define the functions to handle the button clicks
+        // function handleCall(id) {
+        //     console.log('Call button clicked for row with id: ' + id);
+        //     // Add your handling code here
+        // }
 
-        function handleCheck(id) {
-            console.log('Check button clicked for row with id: ' + id);
-            // Add your handling code here
-        }
+        // function handleCheck(id) {
+        //     console.log('Check button clicked for row with id: ' + id);
+        //     // Add your handling code here
+        // }
 
-        function handleArchive(id) {
-            console.log('Archive button clicked for row with id: ' + id);
-            // Add your handling code here
-        }
+        // function handleArchive(id) {
+        //     console.log('Archive button clicked for row with id: ' + id);
+        //     // Add your handling code here
+        // }
 
         $(document).ready(function() {
             // Function to fetch transactions
@@ -330,14 +337,17 @@
                             "title": "Actions",
                             "render": function(data, type, row) {
                                 return '<div class="text-center">' +
-                                    '<button class="btn btn-primary mr-2" style="width: 80px; height: 30px;" onclick="handleStatus(' +
+                                    '<button class="btn btn-primary" style="width: 80px; height: 30px; margin-right: 8px;" onclick="handleStatus(' +
                                     row.id + ')"><i class="fa fa-phone"></i></button>' +
-                                    '<button class="btn btn-success mr-2" style="width: 80px; height: 30px;" onclick="isdone(' +
+                                    '<button class="btn btn-success" style="width: 80px; height: 30px; margin-right: 8px;" onclick="isdone(' +
                                     row.id + ')"><i class="fa fa-check"></i></button>' +
-                                    '<button class="btn btn-danger mr-2" style="width: 80px; height: 30px;" onclick="handleArchiveButtonClick(' +
+                                    '<button class="btn btn-danger" style="width: 80px; height: 30px; margin-right: 8px;" onclick="handleArchiveButtonClick(' +
                                     row.id + ')"><i class="fa fa-archive"></i></button>' +
+                                    '<button class="btn btn-warning" style="width: 80px; height: 30px;" onclick="handleTransfer(' +
+                                    row.id + ')"><i class="fa fa-exchange"></i></button>' +
                                     '</div>';
                             }
+
 
                         }
                     ]
@@ -408,7 +418,6 @@
                 }
             });
         }
-
 
         function isdone(id) {
             // Show confirmation dialog
@@ -542,6 +551,147 @@
             });
         });
 
+        // Define the handleTransfer function
+        function handleTransfer(id) {
+            // Populate the department select dropdown
+            populateDepartmentSelect();
+
+            Swal.fire({
+                title: 'Transfer Confirmation',
+                html: `
+        <form id="transferForm">
+            <div class="form-group">
+                <label for="transferDropdown">Select a department:</label>
+                <select class="form-control" id="transferDropdown">
+                    <!-- Departments will be dynamically populated here -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transactionsDropdown">Select transaction:</label>
+                <select class="form-control" id="transactionsDropdown">
+                    <!-- Transactions will be dynamically populated here -->
+                </select>
+            </div>
+        </form>
+        `,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, transfer it!',
+                preConfirm: () => {
+                    const selectedDepartment = document.getElementById('transferDropdown').value;
+                    const selectedTransaction = document.getElementById('transactionsDropdown').value;
+                    return {
+                        department: selectedDepartment,
+                        transaction: selectedTransaction
+                    };
+                },
+                customClass: {
+                    container: 'bigger-swal-modal'
+                },
+                heightAuto: false,
+                width: '40rem', // Adjust the width as needed
+                onOpen: () => {
+                    // Populate transactions dropdown when the department is selected
+                    $('#transferDropdown').change(function() {
+                        const selectedDepartment = $(this).val();
+                        fetchTransactionsByDepartment(selectedDepartment);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedDepartment = result.value.department;
+                    const selectedTransaction = result.value.transaction;
+                    console.log("Transfer confirmed for row with id:", id, "Selected department ID:",
+                        selectedDepartment, "Selected transaction:", selectedTransaction);
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    // Call the API to update the department and transaction
+                    $.ajax({
+                        url: '/transfer/' + id + '/' + selectedDepartment + '/' + selectedTransaction,
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken // Include CSRF token in request headers
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            Swal.fire(
+                                'Transferred!',
+                                'The item has been transferred.',
+                                'success'
+                            );
+                        },
+                        error: function(xhr) {
+                            // Handle error response
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Failed to transfer. Error: ' + xhr.responseText
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+        // Function to populate the transactions dropdown based on the selected department
+        function fetchTransactionsByDepartment(departmentId) {
+            $.ajax({
+                url: `/transactions/by-department/${departmentId}`,
+                method: 'GET',
+                success: function(response) {
+                    let transactionOptions = '<option value="">Select transaction</option>';
+                    response.transactions.forEach(function(transaction) {
+                        transactionOptions += `
+                    <option value="${transaction.id}">${transaction.transaction_type}</option>
+                `;
+                    });
+                    $('#transactionsDropdown').html(transactionOptions);
+                },
+                error: function(xhr) {
+                    $('#transactionsDropdown').html('<option value="">No Available Transaction Type</option>');
+                }
+            });
+        }
+
+        // Function to populate the department select dropdown
+        function populateDepartmentSelect() {
+            $.ajax({
+                url: '{{ route('departments.all') }}',
+                method: 'GET',
+                success: function(response) {
+                    // Clear existing options
+                    $('#transferDropdown').empty();
+                    // Populate options with departments fetched from the server
+                    response.departments.forEach(function(department) {
+                        $('#transferDropdown').append($('<option>', {
+                            value: department.id,
+                            text: department.name
+                        }));
+                    });
+                },
+                error: function(xhr) {
+                    // Handle error with SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to fetch departments. Error: ' + xhr.responseText
+                    });
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         function fetchArchivedAndDone() {
             $.ajax({
                 url: '/get-archived-and-done',
@@ -563,6 +713,16 @@
                 }
             });
         }
+
+
+
+
+
+
+
+
+
+
 
         function initializeDataTable(data) {
             // Define DataTable columns

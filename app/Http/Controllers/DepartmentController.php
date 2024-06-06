@@ -95,6 +95,17 @@ class DepartmentController extends Controller
         return response()->json(['transactions' => $transactions], 200);
     }
      
+    public function update(Request $request, Department $department)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $department->update($validatedData);
+
+        return response()->json(['success' => true]);
+    }
     
+
     
 }

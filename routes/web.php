@@ -28,9 +28,9 @@ Route::get('/registrar', function () {
     return view('registration.registrar');
 })->name('registrar');
 
-Route::get('/user', function () {
-    return view('user');
-})->name('user');
+// Route::get('/user', function () {
+//     return view('user');
+// })->name('user')->middleware('auth');
 
 Route::get('/Department', function () {
     return view('Department.index');
@@ -38,14 +38,29 @@ Route::get('/Department', function () {
 Route::get('/KioskInterface', function () {
     return view('KioskInterface');
 });
-Route::get('/newad', function () {
-    return view('newad');
-});
+// Route::get('/newad', function () {
+//     return view('newad');
+// })->name('newad')->middleware('auth');
+
 
 Route::get('/Tv', function () {
     return view('Tv');
 });
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user', function () {
+        return view('user');
+    })->name('user');
 
+    Route::get('/newad', function () {
+        return view('newad');
+    })->name('newad');
+
+    Route::get('/department/{id}', [DepartmentController::class, 'index'])
+    ->name('department.index')
+    ->middleware('admin');
+});
+
+Auth::routes(); 
 // Department routes
 Route::get('/department/{id}', [DepartmentController::class, 'index'])->name('department.index');
 Route::get('/departments/create', [DepartmentController::class, 'create'])->name('departments.create');
@@ -77,6 +92,8 @@ use App\Http\Controllers\Auth\UserController;
 
 Route::post('/register', [UserController::class, 'register'])->name('user.store');
 Route::get('/registered-user', [UserController::class, 'ShowUsers']);
+Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
 
 Route::get('/fetch-departments', [DepartmentController::class, 'fetchDepartments']);
@@ -104,3 +121,14 @@ Route::get('/fetch-next-que', [QueuingController::class, 'fetchNextQue']);
 
 
 Route::get('/get-archived-and-done', [StudTransController::class, 'getArchivedAndDone']);
+// Route::post('/transfer/{studTransId}/{departmentId}', [QueuingController::class, 'Transfer']);
+
+Route::post('/transfer/{studTransId}/{departmentId}/{transactionId}', [QueuingController::class, 'Transfer']);
+
+
+
+Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transactions.show');
+
+Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+
+Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');

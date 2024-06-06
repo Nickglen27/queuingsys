@@ -56,7 +56,29 @@ class TransactionController extends Controller
                 return response()->json(['message' => 'Failed to fetch transactions', 'error' => $e->getMessage()], 500);
             }
         }
+        public function update(Request $request, Transaction $transaction)
+        {
+            $validatedData = $request->validate([
+                'transaction_type' => 'required|string|max:255',
+            ]);
         
-
+            $transaction->update($validatedData);
+        
+            return response()->json(['success' => true]);
+        }
+        public function show($id)
+        {
+            // Attempt to find the transaction by ID
+            $transaction = Transaction::find($id);
+        
+            // Check if the transaction exists
+            if ($transaction) {
+                // Return a successful response with the transaction data
+                return response()->json(['success' => true, 'transaction' => $transaction]);
+            } else {
+                // Return a failure response with an appropriate message and a 404 status code
+                return response()->json(['success' => false, 'message' => 'Transaction not found'], 404);
+            }
+        }
     
     }

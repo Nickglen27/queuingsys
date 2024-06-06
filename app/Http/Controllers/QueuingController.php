@@ -120,7 +120,35 @@ class QueuingController extends Controller
             return response()->json(['error' => 'No Queuing record found for the given studTrans_id or is_archive is not 1'], 404);
         }
     }
+    public function Transfer($studTransId, $departmentId, $transactionId)
+    {
+        // Retrieve the Studtrans record associated with the given studTransId
+        $studtrans = Studtrans::find($studTransId);
     
+        // If the Studtrans record exists
+        if ($studtrans) {
+            // Check if is_call is equal to 1
+            $queuing = Queuing::where('studtrans_id', $studTransId)->first();
+            if ($queuing && $queuing->is_call == 1) {
+                // Update the transaction_id in the Studtrans table
+                $studtrans->transaction_id = $transactionId;
+                $studtrans->save();
+    
+                // Update the department_id in the Queuings table
+                $queuing->department_id = $departmentId;
+                $queuing->is_call = 0;
+                $queuing->save();
+    
+                return response()->json(['message' => 'Transaction_id and department_id updated successfully']);
+            } else {
+                // Handle the case where is_call is not equal to 1
+                return response()->json(['error' => 'Cannot transfer if is_call is not equal to 1'], 400);
+            }
+        } else {
+            // Handle the case where no Studtrans record is found for the given studTrans_id
+            return response()->json(['error' => 'No Studtrans record found for the given studTrans_id'], 404);
+        }
+    }
 
 
 public function getIsCallStatus($windows)
