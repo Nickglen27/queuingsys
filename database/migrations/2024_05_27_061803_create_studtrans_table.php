@@ -21,7 +21,7 @@ class CreateStudTransTable extends Migration
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->unsignedBigInteger('transaction_id');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            $table->unsignedBigInteger('window'); // Renamed 'windows' to 'window'
+            $table->unsignedBigInteger('windows'); // Renamed 'windows' to 'window'
             $table->timestamps();
         });
     }

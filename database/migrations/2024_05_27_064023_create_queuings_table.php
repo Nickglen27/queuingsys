@@ -15,7 +15,7 @@ class CreateQueuingsTable extends Migration
             $table->unsignedBigInteger('studtrans_id');
             $table->foreign('studtrans_id')->references('id')->on('studtrans')->onDelete('cascade');
             $table->unsignedBigInteger('guest_id')->nullable();
-            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
+            // $table->foreign('guest_id')->references('id')->on('guests')->onDelete('cascade');
             $table->unsignedBigInteger('windows')->nullable(); // Add windows column
             $table->boolean('is_call')->default(false); // Add is_call column
             $table->boolean('is_done')->default(false); // Add is_done column

@@ -535,16 +535,16 @@
                 });
 
                 // Append Done button function
-                function appendDoneButton() {
-                    var doneButton = $('<button>').text('Done').addClass('btn btn-primary btn-sm done-button');
-                    $('#formTextContainer').append(doneButton);
+                // function appendDoneButton() {
+                //     var doneButton = $('<button>').text('Done').addClass('btn btn-primary btn-sm done-button');
+                //     $('#formTextContainer').append(doneButton);
 
-                    // Add click event handler to prevent page reload
-                    doneButton.on('click', function(event) {
-                        event.preventDefault(); // Prevent page reload
-                        alert('Form submitted!');
-                    });
-                }
+                //     // Add click event handler to prevent page reload
+                //     doneButton.on('click', function(event) {
+                //         event.preventDefault(); // Prevent page reload
+                //         alert('Form submitted!');
+                //     });
+                // }
             });
 
 
