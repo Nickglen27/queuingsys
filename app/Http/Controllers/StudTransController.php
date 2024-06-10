@@ -33,7 +33,7 @@ class StudTransController extends Controller
     
         try {
             // Find the student by their full name
-            $student = Student::whereRaw("CONCAT(Firstname, ' ', Middlename, ' ', Lastname) = ?", [$request->name])->first();
+            $student = Student::whereRaw("CONCAT(Firstname, ' ', ' ', Lastname) = ?", [$request->name])->first();
             if (!$student) {
                 Log::error('Student not found with name: ' . $request->name);
                 return response()->json(['success' => false, 'message' => 'Student not found.']);
@@ -55,7 +55,7 @@ class StudTransController extends Controller
     
             // Get the latest window value
             $latestWindow = StudTrans::max('windows');
-            $nextWindow = ($latestWindow % 3) + 1; // Loop windows within the range of 1 to 3
+            $nextWindow = ($latestWindow % 4) + 1; // Loop windows within the range of 1 to 3
     
             // Create a new StudTrans record with the incremented window value
             $studTrans = StudTrans::create([
@@ -72,7 +72,7 @@ class StudTransController extends Controller
             $newPriorityNum = is_null($maxPriorityNum) ? 1 : $maxPriorityNum + 1;
         
             // Calculate the window number based on the new priority_num
-            $window = ($newPriorityNum % 3) + 1; // Assuming 3 windows, adjust as needed
+            $window = ($newPriorityNum % 4) + 1; // Assuming 3 windows, adjust as needed
         
             Queuing::create([
                 'department_id' => $department->id,

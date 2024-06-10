@@ -528,7 +528,7 @@
 
                 // Function to populate selected name, grade, and section
                 function populateSelectedDetails(student) {
-                    selectedName = student.Firstname + ' ' + student.Middlename + ' ' + student.Lastname;
+                    selectedName = student.Firstname + ' ' + ' ' + student.Lastname;
                     selectedGrade = student.Grade;
                     selectedSection = student.Section;
                     selectedStudentId = student.Stud_id; // Capture the selected student ID
@@ -548,19 +548,22 @@
 
                             if (response && response.length > 0) {
                                 var matchedStudents = response.filter(function(student) {
-                                    var fullName = (student.Firstname + ' ' + student.Middlename +
-                                        ' ' + student.Lastname).trim().toLowerCase();
+                                    var fullName = (student.Firstname + ' ' + (student.Middlename ?
+                                            student.Middlename + ' ' : '') + student.Lastname)
+                                        .trim().toLowerCase();
                                     return fullName.includes(enteredName.toLowerCase());
                                 });
 
                                 if (matchedStudents.length > 0) {
                                     matchedStudents.forEach(function(student) {
                                         var formattedData = $('<p>').text(student.Firstname + ' ' +
-                                            student.Middlename + ' ' + student.Lastname);
+                                            (student.Middlename ? student.Middlename + ' ' :
+                                                '') + student.Lastname);
 
                                         formattedData.click(function() {
-                                            $('#name1').val(student.Firstname + ' ' +
-                                                student.Middlename + ' ' + student
+                                            $('#name1').val(student.Firstname + ' ' + (
+                                                    student.Middlename ? student
+                                                    .Middlename + ' ' : '') + student
                                                 .Lastname);
                                             $('#formTextContainer').empty();
 
@@ -603,6 +606,7 @@
                     var enteredName = $(this).val();
                     fetchDataAndPopulate(enteredName);
                 });
+
 
                 // Append Done button function
                 // function appendDoneButton() {
