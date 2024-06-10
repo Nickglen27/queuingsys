@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
+    <link href="{{ asset('assets/css/all.min.css') }}" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
@@ -51,7 +52,7 @@
 
         .login-left {
             flex: 1;
-            background-image: url('https://scontent.fdvo2-2.fna.fbcdn.net/v/t39.30808-6/380583336_721468949998840_4340693062564530601_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFDbqtYHJKOu9p3b8YBHnsouBOsBfswU6C4E6wF-zBToJLJg0QMeXKHGRZNmzM-7cccFYjezp-bvEtZzVvgxpPi&_nc_ohc=MU4e61b9OHEQ7kNvgGzL12I&_nc_ht=scontent.fdvo2-2.fna&oh=00_AYCCrtB_fs4sVU6vq_MAiZSL8LwVOLQD0QU996z4UudEmA&oe=666587F6');
+            background-image: url('{{ asset('images/queen.jpg') }}');
             background-repeat: no-repeat;
             background-size: 100% 100%;
             /* Stretch the image to cover the entire container */

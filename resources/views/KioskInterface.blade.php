@@ -8,8 +8,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/jpg">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}"></script>
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet"> --}}
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"> --}}
+    <link href="{{ asset('assets/css/select2.min.css') }}"></script>
+
     <style>
         /* Existing CSS */
         body {
@@ -232,6 +236,73 @@
             height: 100%;
             object-fit: cover;
         }
+        /* Adjust the width of the form-text-container */
+.form-text-container {
+    width: 100%;
+    padding: 10px;
+    border: 6px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    height: 370px;
+    overflow-wrap: break-word; /* Break words if they are too long */
+    word-wrap: break-word; /* Break words if they are too long */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+}
+
+/* Ensure text elements inside the form-text-container wrap properly */
+#formTextContainer p {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Break words if they are too long */
+    overflow-wrap: break-word; /* Break words if they are too long */
+}
+
+/* Adjust the width of the form-button-container */
+.form-button-container {
+    width: 100%;
+    padding: 10px;
+    border: 6px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    height: 440px;
+}
+
+/* Ensure the departmentList ul fits within its container */
+#departmentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px; /* Limit the maximum height of the department list */
+    overflow-y: auto; /* Enable vertical scrollbar if content exceeds the max height */
+    word-wrap: break-word; /* Break words if they are too long */
+    overflow-wrap: break-word; /* Break words if they are too long */
+}
+
+.select2-container .select2-selection--single {
+            height: 38px;
+            border: 1px solid #0a1c2e; /* Add border color */
+            border-radius: 4px;
+            background-color: #501010; /* Add background color */
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            color: #495057; /* Add text color */
+            line-height: 36px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+            border-left: 1px solid #1b1d20; /* Add arrow border color */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #000 transparent transparent transparent; /* Add arrow color */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px;
+        }
     </style>
 </head>
 
@@ -271,35 +342,51 @@
         </div>
 
         <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog"
-            aria-labelledby="departmentModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="departmentModalLabel">Department Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="transactionsBody">Select Transaction</p>
-                        <select id="transactionsBodyselect" class="form-control"></select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Save</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+        aria-labelledby="departmentModalLabel" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title" id="departmentModalLabel">Department Details</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                   <p id="transactionsBody">Select Transaction</p>
+                   <!-- Add the class "select2" to the select element -->
+                   <select id="transactionsBodyselect" class="form-control form-control-sm select2"></select>
+               </div>
+               <div class="modal-footer">
+                   <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Save</button>
+               </div>
+           </div>
+       </div>
+   </div>
 
         <!-- Cover Photo HTML -->
         <div class="cover-photo-container" id="coverPhotoContainer">
             <img src="{{ asset('images/background.jpg') }}" alt="Cover Photo">
         </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
+        <script src="{{ asset('assets/js/jquery.min.js') }}" rel="stylesheet">
+        // <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="{{ asset('assets/js/sweetalert2@10.js') }}"></script>
+        {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
+        <!-- Include Select2 JS -->
+        {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> --}}
+        <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+        
+        <!-- Include jQuery -->
+
+
+
+    <!-- Include Bootstrap JS -->
 
         <script>
+             // Trigger Select2 initialization after the modal is shown
+                // $('#departmentModal').on('shown.modal', function () {
+                //     $('#transactionsBodyselect').select2();
+                // });
             $(document).ready(function() {
                 // Initialize variables to store selected department and transaction details
                 var selectedDepartment = '';
@@ -359,43 +446,49 @@
                 }
 
                 function fetchTransactions(departmentId) {
-                    $.ajax({
-                        url: '/transactions/by-department/' + departmentId,
-                        method: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            var selectElement = $('#transactionsBodyselect');
-                            selectElement.empty();
+                $.ajax({
+                    url: '/transactions/by-department/' + departmentId,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var selectElement = $('#transactionsBodyselect');
+                        selectElement.empty();
 
-                            if (response.transactions && response.transactions.length > 0) {
-                                response.transactions.forEach(function(transaction) {
-                                    selectElement.append($('<option>', {
-                                        value: transaction.id,
-                                        text: transaction.transaction_type
-                                    }));
-                                });
-                            } else {
+                        if (response.transactions && response.transactions.length > 0) {
+                            response.transactions.forEach(function(transaction) {
                                 selectElement.append($('<option>', {
-                                    value: '',
-                                    text: 'No transactions found'
+                                    value: transaction.id,
+                                    text: transaction.transaction_type
                                 }));
-                            }
-                            // Update selectedTransaction when the transaction selection changes
-                            selectedTransaction = selectElement.find('option:selected').text();
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Failed to fetch transactions:", status, error);
-                            var selectElement = $('#transactionsBodyselect');
-                            selectElement.empty();
+                            });
+                        } else {
                             selectElement.append($('<option>', {
                                 value: '',
-                                text: 'Error fetching transactions. Please try again later.'
+                                text: 'No transactions found'
                             }));
                         }
-                    });
-                }
 
-                fetchDepartments();
+                        // Initialize Select2 after populating options
+                        selectElement.select2(); 
+
+                        // Update selectedTransaction when the transaction selection changes
+                        selectedTransaction = selectElement.find('option:selected').text();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Failed to fetch transactions:", status, error);
+                        var selectElement = $('#transactionsBodyselect');
+                        selectElement.empty();
+                        selectElement.append($('<option>', {
+                            value: '',
+                            text: 'Error fetching transactions. Please try again later.'
+                        }));
+                    }
+                });
+            }
+
+            fetchDepartments();
+
+
 
                 $('#doneButton').click(function() {
                     // Display Swal.fire modal with selected details
@@ -573,7 +666,10 @@
                 `;
                         modalBody.innerHTML = selectContent;
 
-                        $('#myModal').modal('show');
+                        // Initialize select2 after modal is shown
+            $('#myModal').modal('show').on('shown.bs.modal', function () {
+                $('.select2').select2();
+            });
 
                         const saveButton = document.getElementById('saveButton');
                         saveButton.addEventListener('click', function() {
@@ -623,6 +719,8 @@
 
             // inactivityTime();
         </script>
+    
+    
 
 </body>
 
