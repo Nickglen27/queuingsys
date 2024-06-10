@@ -8,7 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/jpg">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Existing CSS */
@@ -232,6 +233,59 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .form-text-container {
+            width: 100%;
+            padding: 10px;
+            border: 6px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            height: 370px;
+            overflow-wrap: break-word;
+            /* Break words if they are too long */
+            word-wrap: break-word;
+            /* Break words if they are too long */
+            overflow-y: auto;
+            /* Enable vertical scrolling if content exceeds height */
+        }
+
+        /* Ensure text elements inside the form-text-container wrap properly */
+        #formTextContainer p {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            /* Break words if they are too long */
+            overflow-wrap: break-word;
+            /* Break words if they are too long */
+        }
+
+        /* Adjust the width of the form-button-container */
+        .form-button-container {
+            width: 100%;
+            padding: 10px;
+            border: 6px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            height: 440px;
+        }
+
+        /* Ensure the departmentList ul fits within its container */
+        #departmentList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            /* Limit the maximum height of the department list */
+            overflow-y: auto;
+            /* Enable vertical scrollbar if content exceeds the max height */
+            word-wrap: break-word;
+            /* Break words if they are too long */
+            overflow-wrap: break-word;
+            /* Break words if they are too long */
+        }
+
+        /*  */
     </style>
 </head>
 
@@ -256,19 +310,21 @@
         <div class="vertical-separator"></div>
 
         <div class="form-container">
-            <div style="display: flex; justify-content: center;">
-                <h2 style="font-weight: bold;">Select Department</h2>
+            <div class="text-center">
+                <h2 class="font-weight-bold">Select Department</h2>
             </div>
 
             <form>
                 <div class="form-button-container">
                     <div class="row">
-                        <ul id="departmentList"></ul>
+                        <ul id="departmentList" class="list-group" style="width: 50rem"></ul>
+
                     </div>
                 </div>
                 <button type="button" id="doneButton" class="btn btn-success btn-lg btn-block">Proceed</button>
             </form>
         </div>
+
 
         <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog"
             aria-labelledby="departmentModalLabel" aria-hidden="true">
@@ -276,16 +332,18 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="departmentModalLabel">Department Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
                     </div>
                     <div class="modal-body">
                         <p id="transactionsBody">Select Transaction</p>
                         <select id="transactionsBodyselect" class="form-control"></select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Save</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -294,12 +352,20 @@
         <div class="cover-photo-container" id="coverPhotoContainer">
             <img src="{{ asset('images/background.jpg') }}" alt="Cover Photo">
         </div>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <!-- Select2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
         <script>
+            $(document).ready(function() {
+                $('#transactionsBodyselect').select2({
+                    width: '100%' // Set the width to 100%
+                });
+            });
             $(document).ready(function() {
                 // Initialize variables to store selected department and transaction details
                 var selectedDepartment = '';
@@ -430,6 +496,10 @@
                                         text: 'Details stored successfully!',
                                         icon: 'success',
                                         confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload(); // Reload the page
+                                        }
                                     });
                                 },
                                 error: function(xhr, status, error) {
