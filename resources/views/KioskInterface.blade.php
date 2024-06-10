@@ -8,9 +8,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('images/ck.jpg') }}" type="image/jpg">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}"></script>
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
+    <link href="{{ asset('assets/css/select2.min.css') }}"></script>
+    {{-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> --}}
+    
     <style>
         /* Existing CSS */
         body {
@@ -204,14 +207,7 @@
         }
 
         /* Style for the Close button */
-        .btn-close {
-            width: 10px;
-            /* Set a specific width for the button */
-            padding: 5px 10px;
-            /* Add padding to the button for spacing */
-            font-size: 14px;
-            /* Adjust the font size of the button */
-        }
+       
 
         /* New CSS for Cover Photo */
         .cover-photo-container {
@@ -285,6 +281,16 @@
             /* Break words if they are too long */
         }
 
+
+       /* Target the close button with specific selectors */
+
+/* 
+.close-btn:hover span {
+    color: #000 !important;
+} */
+/* .close-btn:hover {
+    color: #ff0000;
+} */
         /*  */
     </style>
 </head>
@@ -325,17 +331,16 @@
             </form>
         </div>
 
-
-        <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog"
-            aria-labelledby="departmentModalLabel" aria-hidden="true">
+        <div class="modal fade" id="departmentModal" tabindex="-1" role="dialog" aria-labelledby="departmentModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="departmentModalLabel">Department Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                        <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close" style="width: 50px;">
+                            <span aria-hidden="true">×</span>
                         </button>
-
+                        
+                    
                     </div>
                     <div class="modal-body">
                         <p id="transactionsBody">Select Transaction</p>
@@ -347,6 +352,8 @@
                 </div>
             </div>
         </div>
+
+    </div>
 
         <!-- Cover Photo HTML -->
         <div class="cover-photo-container" id="coverPhotoContainer">
